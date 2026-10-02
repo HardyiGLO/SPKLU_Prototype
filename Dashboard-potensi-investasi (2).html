@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Potensi Investasi</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#e9e9e9;color:#222;font-size:13px;display:flex;min-height:100vh}
+.side{width:182px;background:#2f57a8;color:#fff;padding:12px 0;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:14px;padding:0 14px 18px}
+.logo b{background:#fff;color:#0a7fbf;padding:4px 8px;font-size:16px;letter-spacing:1px}
+.burger{width:26px;height:18px;border-top:4px solid #fff;border-bottom:4px solid #fff;position:relative}
+.burger:after{content:"";position:absolute;left:0;right:0;top:5px;border-top:4px solid #fff}
+.side h4{font-size:12px;margin:12px 0 2px 20px}
+.side a{display:block;font-size:12px;padding:3px 0 3px 38px;color:#fff;text-decoration:none}
+.side a:hover,.side a.on{background:rgba(255,255,255,.18)}
+.main{flex:1;min-width:0;background:#fff;margin:0 8px 8px 0}
+.top{height:42px;border-bottom:1px solid #999;display:flex;justify-content:flex-end;align-items:center;gap:20px;padding:0 10px}
+.top button{background:#7a3ff2;color:#fff;border:0;border-radius:6px;padding:6px 14px;font-weight:600;cursor:pointer}
+h1{font-size:19px;padding:6px 8px;background:#e9e9e9;margin-left:-0px}
+.tabs{padding:14px 12px 6px;border-bottom:1px solid #aaa;display:flex;gap:26px;margin:0 10px}
+.tabs a{color:#111;text-decoration:none;font-weight:500}
+.tabs a.on{color:#2f57a8;text-decoration:underline}
+.pad{padding:0 22px 20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin:18px 0}
+.stat{border:1px solid #555;border-radius:8px;background:#f6f6f8;padding:12px;display:flex;gap:12px;align-items:center}
+.stat .ev{width:38px;height:38px;flex-shrink:0;color:#2f57a8}
+.stat.aktif .ev{color:#1d9bb0}.stat.baru .ev{color:#f0a52a}
+.stat span{display:block;font-weight:600}.stat strong{font-size:19px;margin-left:8px}
+
+/* ===== PETA SEBARAN SPKLU ===== */
+.map-wrap{position:relative;height:380px;overflow:hidden;border-radius:1px}
+#mapSpklu{position:absolute;inset:0;background:#cfe3ef}
+.legend{position:absolute;left:14px;bottom:24px;z-index:500;background:#fff;border-radius:10px;padding:10px 14px;font-size:11px;line-height:1.7;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.legend .h{background:#1f3352;color:#fff;font-size:11px;padding:2px 8px;border-radius:4px 4px 0 0;margin:-10px -14px 8px}
+.legend .row{display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);flex-shrink:0}
+.dot.t{background:#1d9bb0}.dot.o{background:#f0a52a}
+.totals{position:absolute;right:14px;bottom:24px;z-index:500;background:#fff;border-radius:22px;padding:8px 16px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.totals b{margin-right:18px}.totals b:last-child{margin-right:0}
+.spklu-pin{width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.spklu-pin.t{background:#1d9bb0}.spklu-pin.o{background:#f0a52a}
+.spklu-pin:after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+.leaflet-popup-content{font:12px/1.5 "Segoe UI",Arial,sans-serif;margin:10px 12px}
+.leaflet-popup-content b{display:block;font-size:13px}
+
+.filter{display:flex;justify-content:flex-end;align-items:center;gap:20px;margin:10px 0}
+.filter strong{color:#3b82d6;font-size:15px}
+select{width:150px;padding:9px 10px;border:1px solid #bbb;border-radius:4px;background:#fff}
+.tbl{border:1px solid #ccc;border-radius:8px;overflow:hidden}
+.tools{display:flex;gap:22px;padding:12px 16px;color:#555}
+table{width:100%;border-collapse:collapse}
+th{font-weight:500;text-align:left;padding:10px 12px;color:#444;border-top:1px solid #ddd}
+td{padding:8px 12px;border-top:1px solid #ddd;vertical-align:middle}
+td img,.thumb{width:66px;height:42px;border-radius:3px;background:linear-gradient(135deg,#8fa39a,#4a5a55);display:block}
+.btn{background:#a9c4f5;border:0;border-radius:4px;padding:5px 12px;cursor:pointer;font-size:12px}
+.btn:hover{background:#8db0ee}
+.add{padding:10px 16px;border-top:1px solid #ddd;font-size:18px;color:#555}
+@media(max-width:800px){.side{display:none}.stats{grid-template-columns:1fr}.tbl{overflow-x:auto}}
+</style>
+</head>
+<body>
+<nav class="side">
+  <div class="logo"><b>PLN</b><div class="burger"></div></div>
+  <h4>Dashboard</h4><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+  <h4>Potensi Lahan</h4><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+  <h4>Mitra Overview</h4><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+  <h4>Assigment</h4><a href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+  <h4>Potensi Investasi</h4><a href="#">Publish Potensi Investasi</a>
+  <h4>Investor</h4><a href="#" class="on">Dashboard Potensi Investasi &amp; Booking</a>
+  <h4>Penawaran Potensi Investasi</h4><a href="#">Penawaran Investor</a>
+  <h4>Contract Management</h4><a href="#">Contract &amp; Support</a><a href="#">Progress Konstruksi</a>
+  <h4>Workflow</h4><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+  <h4>Configurasi</h4><a href="#">Master Data</a><a href="#">Authotization</a><a href="#">Master User</a><a href="#">Master Organization</a>
+</nav>
+
+<div class="main">
+  <div class="top"><span>🔔</span><span>👤</span><button>➜ Keluar</button></div>
+  <h1>Dashboard Potensi Investasi</h1>
+  <div class="tabs"><a href="#" class="on">Daftar Potensi Investasi</a><a href="#">Daftar Booking Potensi Investasi</a></div>
+
+  <div class="pad">
+    <div class="stats">
+      <div class="stat"><svg class="ev" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="15" height="24" rx="2.5"/><rect x="9.5" y="7.5" width="8" height="6" rx="1"/><path d="M14.5 16.5l-3 4.5h4l-3 4.5" /><path d="M3.5 31.5h20"/><path d="M21 12h2.5a3 3 0 0 1 3 3v8a2.5 2.5 0 0 0 5 0V12.5l-2.5-3"/></svg><div><span>Total Potensi Investasi</span><strong>48</strong></div></div>
+      <div class="stat aktif"><svg class="ev" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="15" height="24" rx="2.5"/><rect x="9.5" y="7.5" width="8" height="6" rx="1"/><path d="M14.5 16.5l-3 4.5h4l-3 4.5" /><path d="M3.5 31.5h20"/><path d="M21 12h2.5a3 3 0 0 1 3 3v8a2.5 2.5 0 0 0 5 0V12.5l-2.5-3"/></svg><div><span>Total SPKLU Aktif</span><strong>21</strong></div></div>
+      <div class="stat baru"><svg class="ev" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="15" height="24" rx="2.5"/><rect x="9.5" y="7.5" width="8" height="6" rx="1"/><path d="M14.5 16.5l-3 4.5h4l-3 4.5" /><path d="M3.5 31.5h20"/><path d="M21 12h2.5a3 3 0 0 1 3 3v8a2.5 2.5 0 0 0 5 0V12.5l-2.5-3"/></svg><div><span>Pontesi SPKLU Baru</span><strong>27</strong></div></div>
+    </div>
+
+    <!-- PETA SEBARAN SPKLU -->
+    <div class="map-wrap">
+      <div id="mapSpklu" role="img" aria-label="Peta sebaran SPKLU aktif dan potensi SPKLU baru di Indonesia"></div>
+      <div class="legend">
+        <div class="h">Keterangan</div>
+        <div class="row"><span class="dot t"></span>SPKLU Aktif</div>
+        <div class="row"><span class="dot o"></span>Potensi SPKLU Baru</div>
+      </div>
+      <div class="totals"><b>Aktif: <span id="cAktif">0</span></b><b>Potensi: <span id="cBaru">0</span></b></div>
+    </div>
+
+    <div class="filter"><strong>Filter</strong>
+      <select id="fRegion" aria-label="Region"><option value="">Region</option><option>Jawa</option><option>Sumatera</option><option>Kalimantan</option><option>Sulawesi</option><option>Bali &amp; Nusa Tenggara</option><option>Papua &amp; Maluku</option></select>
+      <select aria-label="Province"><option>Province</option><option>DKI Jakarta</option><option>Jawa Timur</option></select>
+    </div>
+
+    <div class="tbl">
+      <div class="tools"><span>⟳</span><span>▦</span><span>≡</span><span>⛉</span><span>⇅</span><span>☰</span><span>⚙</span><span>⇪</span><span>⌕</span></div>
+      <table>
+        <thead><tr><th></th><th>Foto Lahan</th><th>Lokasi Lahan</th><th>Luas Lahan</th><th>Status Lahan</th><th>Status</th><th>Investor Minat</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><div class="thumb"></div></td><td>Jl. Jendral Sudirman, Kav 52, Jakarta Selatan</td><td>650m2</td><td>Hak Milik</td><td>Open</td><td>5 Investor</td><td><a href="v2-detail-Dashboard potensi-investasi (1).html"><button class="btn">Detail</button></a></td></tr>
+          <tr><td>2</td><td><div class="thumb"></div></td><td>Jl. Jendral Sudirman, Kav 52, Jakarta Selatan</td><td>P200m2</td><td>Hak Guna Babunan</td><td>Tidak Tersedia</td><td>2 Investor</td><td><a href="v2-detail-Dashboard potensi-investasi (1).html"><button class="btn">Detail</button></a></td></tr>
+          <tr><td>3</td><td><div class="thumb"></div></td><td>Jl. Jendral Sudirman, Kav 52, Jakarta Selatan</td><td>780m2</td><td>Hak Milik</td><td>Open</td><td>3 Investor</td><td><a href="v2-detail-Dashboard potensi-investasi (1).html"><button class="btn">Detail</button></a></td></tr>
+        </tbody>
+      </table>
+      <div class="add">+</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
+<script>
+/* Data titik SPKLU (contoh). Ganti dengan data asli / hasil fetch API.
+   tipe: "aktif" = SPKLU Aktif (21), "baru" = Potensi SPKLU Baru (27) */
+const SPKLU = [{"nama": "SPKLU Jakarta Pusat", "lat": -6.186, "lng": 106.834, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Jakarta Selatan", "lat": -6.261, "lng": 106.81, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Jakarta Barat", "lat": -6.168, "lng": 106.764, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Bekasi", "lat": -6.238, "lng": 106.992, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Depok", "lat": -6.402, "lng": 106.794, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Tangerang", "lat": -6.178, "lng": 106.63, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Bogor", "lat": -6.595, "lng": 106.816, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Bandung", "lat": -6.917, "lng": 107.619, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Semarang", "lat": -6.966, "lng": 110.42, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Yogyakarta", "lat": -7.797, "lng": 110.37, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Surabaya", "lat": -7.257, "lng": 112.752, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Malang", "lat": -7.966, "lng": 112.633, "region": "Jawa", "tipe": "aktif"}, {"nama": "SPKLU Medan", "lat": 3.595, "lng": 98.672, "region": "Sumatera", "tipe": "aktif"}, {"nama": "SPKLU Palembang", "lat": -2.976, "lng": 104.775, "region": "Sumatera", "tipe": "aktif"}, {"nama": "SPKLU Padang", "lat": -0.947, "lng": 100.417, "region": "Sumatera", "tipe": "aktif"}, {"nama": "SPKLU Denpasar", "lat": -8.67, "lng": 115.212, "region": "Bali & Nusa Tenggara", "tipe": "aktif"}, {"nama": "SPKLU Balikpapan", "lat": -1.238, "lng": 116.828, "region": "Kalimantan", "tipe": "aktif"}, {"nama": "SPKLU Makassar", "lat": -5.147, "lng": 119.432, "region": "Sulawesi", "tipe": "aktif"}, {"nama": "SPKLU Pekanbaru", "lat": 0.507, "lng": 101.447, "region": "Sumatera", "tipe": "aktif"}, {"nama": "SPKLU Lampung", "lat": -5.429, "lng": 105.262, "region": "Sumatera", "tipe": "aktif"}, {"nama": "SPKLU Manado", "lat": 1.474, "lng": 124.842, "region": "Sulawesi", "tipe": "aktif"}, {"nama": "Lahan Cirebon", "lat": -6.706, "lng": 108.557, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Solo", "lat": -7.566, "lng": 110.828, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Kediri", "lat": -7.848, "lng": 112.017, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Serang", "lat": -6.12, "lng": 106.15, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Banyuwangi", "lat": -8.219, "lng": 114.369, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Purwokerto", "lat": -7.424, "lng": 109.239, "region": "Jawa", "tipe": "baru"}, {"nama": "Lahan Banda Aceh", "lat": 5.548, "lng": 95.324, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Jambi", "lat": -1.61, "lng": 103.613, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Bengkulu", "lat": -3.8, "lng": 102.266, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Batam", "lat": 1.045, "lng": 104.03, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Pematangsiantar", "lat": 2.96, "lng": 99.069, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Bandar Lampung Utara", "lat": -4.85, "lng": 104.9, "region": "Sumatera", "tipe": "baru"}, {"nama": "Lahan Pontianak", "lat": -0.027, "lng": 109.343, "region": "Kalimantan", "tipe": "baru"}, {"nama": "Lahan Banjarmasin", "lat": -3.319, "lng": 114.591, "region": "Kalimantan", "tipe": "baru"}, {"nama": "Lahan Samarinda", "lat": -0.502, "lng": 117.154, "region": "Kalimantan", "tipe": "baru"}, {"nama": "Lahan Palangkaraya", "lat": -2.21, "lng": 113.917, "region": "Kalimantan", "tipe": "baru"}, {"nama": "Lahan Tarakan", "lat": 3.3, "lng": 117.633, "region": "Kalimantan", "tipe": "baru"}, {"nama": "Lahan Palu", "lat": -0.895, "lng": 119.87, "region": "Sulawesi", "tipe": "baru"}, {"nama": "Lahan Kendari", "lat": -3.978, "lng": 122.515, "region": "Sulawesi", "tipe": "baru"}, {"nama": "Lahan Gorontalo", "lat": 0.544, "lng": 123.059, "region": "Sulawesi", "tipe": "baru"}, {"nama": "Lahan Mataram", "lat": -8.583, "lng": 116.117, "region": "Bali & Nusa Tenggara", "tipe": "baru"}, {"nama": "Lahan Kupang", "lat": -10.178, "lng": 123.597, "region": "Bali & Nusa Tenggara", "tipe": "baru"}, {"nama": "Lahan Labuan Bajo", "lat": -8.497, "lng": 119.888, "region": "Bali & Nusa Tenggara", "tipe": "baru"}, {"nama": "Lahan Ambon", "lat": -3.696, "lng": 128.181, "region": "Papua & Maluku", "tipe": "baru"}, {"nama": "Lahan Jayapura", "lat": -2.533, "lng": 140.717, "region": "Papua & Maluku", "tipe": "baru"}, {"nama": "Lahan Sorong", "lat": -0.876, "lng": 131.255, "region": "Papua & Maluku", "tipe": "baru"}, {"nama": "Lahan Ternate", "lat": 0.789, "lng": 127.376, "region": "Papua & Maluku", "tipe": "baru"}];
+
+const map = L.map('mapSpklu', {zoomControl:true, scrollWheelZoom:false}).setView([-2.5, 118], 5);
+/* Peta dasar: OpenFreeMap (vector tile, data OpenStreetMap) - gratis, tanpa API key,
+   dan bisa dibuka langsung dari file://. Ganti 'liberty' dengan 'positron' / 'bright' bila ingin gaya lain. */
+const ATRIBUSI = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data dari <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+function webglDidukung(){
+  try{ return !!document.createElement('canvas').getContext('webgl2'); }catch(e){ return false; }
+}
+if(window.maplibregl && L.maplibreGL && webglDidukung()){
+  L.maplibreGL({ style: 'https://tiles.openfreemap.org/styles/liberty', attribution: ATRIBUSI }).addTo(map);
+}else{
+  /* Cadangan bila WebGL / library vector tidak tersedia. Catatan: tile OSM standar
+     hanya jalan jika halaman dibuka lewat http://localhost (bukan file://). */
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+}
+
+const layer = L.layerGroup().addTo(map);
+
+function render(region){
+  layer.clearLayers();
+  let a = 0, b = 0;
+  SPKLU.forEach(p => {
+    if(region && p.region !== region) return;
+    const cls = p.tipe === 'aktif' ? 't' : 'o';
+    p.tipe === 'aktif' ? a++ : b++;
+    const icon = L.divIcon({className:'', html:'<div class="spklu-pin '+cls+'"></div>', iconSize:[22,22], iconAnchor:[11,22], popupAnchor:[0,-22]});
+    L.marker([p.lat, p.lng], {icon})
+      .bindPopup('<b>'+p.nama+'</b>'+(p.tipe==='aktif'?'SPKLU Aktif':'Potensi SPKLU Baru')+'<br>'+p.region)
+      .addTo(layer);
+  });
+  document.getElementById('cAktif').textContent = a;
+  document.getElementById('cBaru').textContent = b;
+}
+render('');
+document.getElementById('fRegion').addEventListener('change', e => render(e.target.value));
+</script>
+</body>
+</html>

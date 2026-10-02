@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Survey Potensi Lahan</title>
+<style>
+:root{--bg:#e6e6e6;--panel:#fff;--text:#1c1c1c;--blue:#2f5aa8;--side:#2f5aa8;--sidetx:#fff;--band:#c7dcfb;--line:#e3e3e3;--field:#f2f2f8;--muted:#666;--purple:#6a35d6;--red:#c00c0c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1a1d;--panel:#26262b;--text:#eee;--blue:#8fb1f0;--band:#2c3d5c;--line:#3a3a41;--field:#33333b;--muted:#aaa}}
+:root[data-theme="dark"]{--bg:#1a1a1d;--panel:#26262b;--text:#eee;--blue:#8fb1f0;--band:#2c3d5c;--line:#3a3a41;--field:#33333b;--muted:#aaa}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans","Segoe UI",Arial,sans-serif;font-size:13px;display:flex;min-height:100vh}
+aside{width:194px;flex:none;background:var(--side);color:var(--sidetx);padding:14px 0;font-size:12px}
+.logo{margin:0 16px 30px;background:#fff;color:#0a6fb5;font-weight:800;padding:6px 10px;border-radius:2px;display:inline-block;letter-spacing:2px}
+aside h4{margin:12px 12px 2px;font-size:12px}
+aside a{display:block;padding:4px 12px 4px 28px;color:#fff;text-decoration:none;opacity:.95}
+aside a.on{background:rgba(255,255,255,.18)}
+main{flex:1;min-width:0}
+.top{height:44px;background:var(--panel);border-bottom:1px solid #bbb;display:flex;justify-content:flex-end;align-items:center;gap:20px;padding:0 20px}
+.top button{background:#5b3fd6;color:#fff;border:0;border-radius:6px;padding:6px 14px;font-size:11px}
+h1{font-size:20px;margin:6px 10px}
+.card{background:var(--panel);margin:0 10px;padding:20px 15px;min-height:560px}
+.card h2{color:var(--blue);font-size:16px;margin:0 0 20px 0}
+.band{background:var(--band);height:30px;display:flex;justify-content:flex-end;align-items:center;padding:0 20px;color:var(--blue);font-weight:600;margin-bottom:40px}
+.tablewrap{border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th{font-weight:400;color:var(--muted);text-align:left;padding:10px 8px;height:38px}
+td{padding:0 8px;height:34px;border-top:1px solid var(--line)}
+td.n,th.n{width:44px;color:var(--muted);text-align:center}
+.dots{background:none;border:0;cursor:pointer;color:var(--text);font-size:14px;letter-spacing:1px;padding:4px 8px;border-radius:4px}
+.dots:hover,.dots:focus-visible{background:var(--line)}
+.menu{position:absolute;z-index:20;background:var(--panel);border:2px solid var(--text);border-radius:14px;padding:12px 18px 14px;min-width:170px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.menu h3{margin:0 0 10px;color:#5f9af0;font-size:17px}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--text);font:inherit;font-size:16px;padding:8px 4px;cursor:pointer;border-radius:4px}
+.menu button:hover,.menu button:focus-visible{background:var(--line)}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto}
+.modal{background:var(--panel);border-radius:6px;width:100%;max-width:960px;padding:0 0 24px}
+.modal.wide{max-width:1380px}
+.modal>h3{margin:0;padding:16px 22px 10px;color:var(--blue);font-size:16px;border-bottom:1px solid #777}
+.body{display:flex;gap:0;padding:8px 22px}
+.col{flex:1;min-width:0;padding-right:18px}
+.col+.col{border-left:1px solid #777;padding:0 0 0 18px}
+.col h4{font-size:15px;margin:8px 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+.full{grid-column:1/-1}
+label{display:block;font-size:12px;margin-bottom:3px}
+input,textarea,select{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:8px;font:inherit;font-size:12px}
+select{border:1px solid #333;border-radius:6px;background:var(--field)}
+textarea{height:96px;resize:vertical}
+input[readonly],textarea[readonly]{background:var(--field)}
+.req{color:#d00}
+.btn{border:0;color:#fff;font-weight:700;padding:10px 0;width:118px;border-radius:2px;cursor:pointer;font:inherit;font-weight:700}
+.btn.save{background:var(--side)}.btn.close{background:var(--red)}
+.dl{background:var(--purple);color:#fff;border:0;border-radius:3px;padding:5px 16px;font-size:10px;font-weight:700;cursor:pointer}
+.doclbl{color:var(--blue);font-weight:700;font-size:11px}
+.docrow{display:flex;align-items:center;gap:12px;margin-top:8px}
+.foot{display:flex;justify-content:flex-end;gap:32px;padding:20px 40px 0}
+.drop{border:2px dashed #b9c3d3;background:#eaeef5;border-radius:4px;text-align:center;padding:22px 10px;cursor:pointer;color:#333;font-size:11px}
+.drop b{display:block;font-size:12px;margin-top:4px}
+.thumbs{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+.thumbs div{width:147px;height:132px;background:#f2eee7 center/cover;display:grid;place-items:center;color:#5a4d43;font-size:38px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:6px;z-index:99}
+@media(max-width:800px){aside{display:none}.body{flex-direction:column}.col+.col{border:0;padding:12px 0 0}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside>
+  <span class="logo">PLN</span>
+  <h4>Dashboard</h4><a>Dashboard Pengelolaan Lahan SPKLU</a>
+  <h4>Potensi Lahan</h4><a>Potensi Lahan Overview</a><a>Verifikasi Potensi Lahan</a><a class="on">Survey Potensi Lahan</a>
+  <h4>Mitra Overview</h4><a>Mitra EPC Overview</a><a>Mitra Mitra O&amp;M Overview</a><a>Mitra Lahan Overview</a>
+  <h4>Assigment</h4><a>Assigment Potensi Lahan</a><a>Re-Assigment</a>
+  <h4>Potensi Investasi</h4><a>Publish Potensi Investasi</a>
+  <h4>Investor</h4><a>Daftar Potensi Investasi &amp; Booking</a>
+  <h4>Penawaran Potensi Investasi</h4><a>Penawaran Investor</a>
+  <h4>Contract Management</h4><a>Contract &amp; Support</a><a>Progress Konstruksi</a>
+  <h4>Workflow</h4><a>Workflow checklist</a><a>Stage Gate</a>
+  <h4>Configurasi</h4><a>Master Data</a><a>Authotization</a><a>Master User</a><a>Master Organization</a>
+</aside>
+<main>
+  <div class="top"><span>🔔</span><span>👤</span><button>Keluar</button></div>
+  <h1>Survey Potensi Lahan</h1>
+  <div class="card">
+    <h2>Survey Potensi Lahan</h2>
+    <div class="band">⟳ Refresh</div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="n"></th><th>Action</th><th>No Potensi Lahan</th><th>Alamat Lahan</th><th>Luas Lahan</th><th>Pemilik</th><th>Status Lahan</th><th>Status</th><th>Tgl Survey</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div class="menu hidden" id="menu" role="menu">
+  <h3>Detail Action</h3>
+  <button role="menuitem" data-open="survey">Survey</button>
+  <button role="menuitem" data-open="hasil">Hasil Survey</button>
+</div>
+
+<div class="overlay hidden" id="survey" role="dialog" aria-modal="true" aria-label="Survey Potensi Lahan">
+  <div class="modal">
+    <h3>Survey Potensi Lahan</h3>
+    <div class="body"><div class="col"><h4>Lahan Mitra Information</h4><div class="grid" data-info></div></div></div>
+    <div class="foot"><button class="btn save" data-save>Save</button><button class="btn close" data-close>Close</button></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="hasil" role="dialog" aria-modal="true" aria-label="Hasil Survey Potensi Lahan">
+  <div class="modal wide">
+    <h3>Hasil Survey Potensi Lahan</h3>
+    <div class="body">
+      <div class="col"><h4>Lahan Mitra Information</h4><div class="grid" data-info></div></div>
+      <div class="col">
+        <h4>Hasil Survey</h4>
+        <div class="grid">
+          <div class="full"><label>Alamat Lengkap Lahan</label><textarea></textarea></div>
+          <div class="full"><b style="font-size:11px">GeoTagging</b></div>
+          <div><label>Longtitude</label><input></div><div><label>Latitude</label><input></div>
+          <div><label>Luas Lahan</label><input></div>
+          <div><label>Status Lahan</label><select><option>Milik Sendiri</option><option>Sewa</option></select></div>
+          <div><label>Tanggal Survey</label><input type="date" value="2026-10-01"></div>
+          <div><label><b>Action</b></label><select id="action"><option>Approve</option><option>Reject</option></select></div>
+          <div class="full"><h4 style="margin:10px 0 0">Dokumentasi</h4></div>
+          <div class="full">
+            <label class="drop" style="display:block"><input type="file" id="files" accept="image/jpeg,image/png" multiple hidden>
+              ☁<b>Drag &amp; Drop or Click to Upload Photos</b>Tarik &amp; Lepas atau Klik untuk Unggah Foto<br><small>Supported formats: JPEG, PNG. Max 10MB each. (Maximum 15 files)</small></label>
+            <div class="thumbs" id="thumbs"><div>🖼</div><div>🖼</div><div>🖼</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn save" data-save>Save</button><button class="btn close" data-close>Close</button></div>
+  </div>
+</div>
+
+<template id="info">
+  <div><label>Pemilik Lahan</label><input readonly value="Eko"></div>
+  <div><label>No Potensi Lahan</label><input readonly value="PGJ/2026/05/-01"></div>
+  <div class="full"><label>Alamat Lengkap Lahan</label><textarea readonly></textarea></div>
+  <div class="full"><label>Deskripsi Lahan</label><textarea readonly></textarea></div>
+  <div><label>Luas Lahan</label><input readonly value="600m2"></div>
+  <div><label>Status Lahan</label><select disabled><option>Milik Sendiri</option></select></div>
+  <div><label>Province</label><select disabled><option>DKI Jakarta</option></select></div>
+  <div><label>City</label><select disabled><option>Jakarta Selatan</option></select></div>
+  <div><label>Postal Code</label><input readonly value="14410"></div><div></div>
+  <div><label>Longtitude</label><input readonly></div><div><label>Latitude</label><input readonly></div>
+  <div><span class="doclbl">Upload Dokument Kepemilikan Tanah</span> <span class="doclbl">&nbsp;(SHM/HGB/ Hak Pakai)</span>
+    <div class="docrow"><button class="dl" type="button">Download</button><b style="font-size:11px">Nama_file_.pdf</b></div></div>
+  <div><label>Appointment Survey <span class="req">*</span></label><input readonly value="01 / 10 / 2026"></div>
+</template>
+
+<script>
+const data=[["Approved"],["Rejected"],["Survey"]];
+const rows=document.getElementById('rows');
+for(let i=0;i<7;i++){
+  const d=data[i];
+  rows.insertAdjacentHTML('beforeend', d
+    ? `<tr><td class="n">${i+1}</td><td><button class="dots" aria-label="Action" aria-haspopup="menu">:::</button></td><td>PGJ/2026/05/-01</td><td>Kediri</td><td>600m2</td><td>EKo</td><td>Milik Sendiri</td><td class="st">${d[0]}</td><td>01/10/2026</td></tr>`
+    : `<tr><td class="n">${i+1}</td><td colspan="8"></td></tr>`);
+}
+const menu=document.getElementById('menu');
+const tpl=document.getElementById('info').innerHTML;
+document.querySelectorAll('[data-info]').forEach(e=>e.innerHTML=tpl);
+let currentRow=null;
+
+function closeAll(){menu.classList.add('hidden');document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),1800)}
+
+document.addEventListener('click',e=>{
+  const dots=e.target.closest('.dots');
+  if(dots){
+    currentRow=dots.closest('tr');
+    const r=dots.getBoundingClientRect();
+    menu.style.left=(r.left+window.scrollX+10)+'px';
+    menu.style.top=(r.bottom+window.scrollY+4)+'px';
+    menu.classList.remove('hidden');
+    return;
+  }
+  const open=e.target.closest('[data-open]');
+  if(open){
+    menu.classList.add('hidden');
+    document.getElementById(open.dataset.open).classList.remove('hidden');
+    return;
+  }
+  if(e.target.closest('[data-close]')){closeAll();return}
+  const save=e.target.closest('[data-save]');
+  if(save){
+    if(save.closest('#hasil')&&currentRow){
+      currentRow.querySelector('.st').textContent=document.getElementById('action').value==='Approve'?'Approved':'Rejected';
+    }
+    closeAll();toast('Data berhasil disimpan');return;
+  }
+  if(!e.target.closest('#menu'))menu.classList.add('hidden');
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+
+document.getElementById('files').addEventListener('change',e=>{
+  const t=document.getElementById('thumbs');t.innerHTML='';
+  [...e.target.files].slice(0,15).forEach(f=>{
+    const d=document.createElement('div');d.style.backgroundImage=`url(${URL.createObjectURL(f)})`;t.append(d);
+  });
+});
+</script>
+</body>
+</html>

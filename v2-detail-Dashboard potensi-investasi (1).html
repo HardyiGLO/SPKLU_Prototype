@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detail Potensi Investasi - SPKLU Jakarta Selatan</title>
+<style>
+:root{--side:#2f5aa8;--bg:#e9eaec;--card:#fff;--ink:#1f2328;--muted:#5b6470;--line:#d5d9df;--accent:#2f5aa8;--btn:#2f5aa8;--box:#f3f4f8;--pdf:#e5483d;--purple:#7a3ff2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--card:#1f242b;--ink:#e8eaed;--muted:#9aa3ae;--line:#38404a;--box:#282e37}}
+:root[data-theme="dark"]{--bg:#15181d;--card:#1f242b;--ink:#e8eaed;--muted:#9aa3ae;--line:#38404a;--box:#282e37}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 "Noto Sans","Segoe UI",Arial,sans-serif}
+.app{display:flex;min-height:100vh}
+aside{width:200px;background:var(--side);color:#fff;padding:14px 10px;flex-shrink:0;font-size:12.5px}
+.logo{background:#fff;color:#1a6fb5;font-weight:800;letter-spacing:2px;padding:6px 10px;border-radius:2px;margin-bottom:14px;display:inline-block;font-size:16px}
+aside h4{margin:12px 0 3px;font-size:12.5px}
+aside a{display:block;color:#fff;text-decoration:none;padding:3px 0 3px 18px;opacity:.95}
+aside a:hover{text-decoration:underline}
+main{flex:1;min-width:0}
+header{background:var(--card);height:46px;display:flex;justify-content:flex-end;align-items:center;gap:22px;padding:0 16px;border-bottom:1px solid var(--line)}
+.keluar{background:var(--purple);color:#fff;border:0;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600}
+h1{font-size:20px;margin:8px 12px}
+.panel{background:var(--card);margin:0 10px 20px;padding:0 14px 20px}
+.top{display:flex;justify-content:space-between;color:var(--accent);font-weight:600;font-size:12.5px;padding:14px 0 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.cols{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:30px}
+
+/* Kotak border */
+.box{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--card)}
+.box + .box{margin-top:14px}
+
+.photo{height:140px;border-radius:1px;display:flex;align-items:flex-end;padding:0;color:#fff;font-size:11px;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.info p{margin:12px 0;font-size:12.5px}
+.info p:last-child{margin-bottom:0}
+.info .loc{display:flex;gap:14px}
+.booking{font-size:12.5px}
+.inv{display:flex;align-items:center;gap:10px;margin:14px 0 20px}
+.inv .ic{width:40px;height:40px;border-radius:50%;background:var(--box);display:grid;place-items:center}
+.inv small{display:block;color:var(--muted)}
+.inv b{font-size:18px}
+.cta{width:100%;background:var(--btn);color:#fff;border:0;padding:13px;border-radius:3px;font-size:15px;margin-top:20px;cursor:pointer}
+.cta:hover{filter:brightness(1.1)}
+.cta:focus-visible,.dl:focus-visible,input:focus-visible{outline:2px solid #f5a623;outline-offset:2px}
+.docs{background:#e6e8ee;padding:8px 6px 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.docs>b{grid-column:1/-1;font-size:12.5px;padding-left:8px}
+.doc{background:var(--card);padding:22px 20px 14px}
+.doc .row{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.pdf{width:40px;height:50px;background:#eee;border-radius:3px;position:relative;flex-shrink:0}
+.pdf:after{content:"PDF";position:absolute;left:-4px;bottom:8px;background:var(--pdf);color:#fff;font-size:10px;font-weight:700;padding:2px 5px;border-radius:2px}
+.doc b{display:block;font-size:14.5px;line-height:1.25}
+.doc span{font-size:12.5px}
+.dl{width:100%;background:var(--card);color:var(--ink);border:1px solid var(--muted);border-radius:4px;padding:6px;font-size:12.5px;cursor:pointer}
+h2{font-size:16.5px;margin:26px 0 12px}
+.sim{display:flex;flex-wrap:wrap;gap:24px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px}
+.donut{width:150px;height:150px;border-radius:50%;flex-shrink:0;-webkit-mask:radial-gradient(circle,transparent 42%,#000 43%);mask:radial-gradient(circle,transparent 42%,#000 43%)}
+.legend div{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:15px}
+.legend i{width:14px;height:14px;border-radius:50%}
+.ctrl{display:grid;grid-template-columns:auto 62px;gap:9px 14px;align-items:center;font-size:11px;font-weight:600}
+.ctrl input{width:62px;padding:2px 4px;font-size:10px;border:1px solid var(--line);border-radius:3px;background:var(--box);color:var(--ink)}
+.fin{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:12.5px}
+.fin b{display:block;margin-top:6px}
+.formula{border:1px solid var(--ink);border-radius:8px;background:var(--box);padding:10px;font-size:10.5px;display:flex;align-items:center;gap:8px;margin-top:8px}
+.frac{text-align:center;flex:5}
+.frac div:first-child{border-bottom:1px solid var(--ink);padding-bottom:3px;margin-bottom:3px}
+.bep{border:1px solid var(--ink);border-radius:8px;background:var(--box);padding:10px;margin-top:8px;font-size:11px}
+.bep b{font-size:14px;margin-top:8px}
+.warn{color:#c0392b;font-size:11px;min-height:14px}
+@media (max-width:820px){aside{display:none}.cols{grid-template-columns:1fr}.docs,.fin{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+ <span class="logo">PLN</span>
+ <h4>Dashboard</h4><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+ <h4>Potensi Lahan</h4><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+ <h4>Mitra Overview</h4><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+ <h4>Assigment</h4><a href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+ <h4>Potensi Investasi</h4><a href="#">Publish Potensi Investasi</a>
+ <h4>Investor</h4><a href="#">Daftar Potensi Investasi &amp; Booking</a>
+ <h4>Penawaran Potensi Investasi</h4><a href="#">Penawaran Investor</a>
+ <h4>Contract Management</h4><a href="#">Contract &amp; Support</a><a href="#">Progress Konstruksi</a>
+ <h4>Workflow</h4><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+ <h4>Configurasi</h4><a href="#">Master Data</a><a href="#">Authotization</a><a href="#">Master User</a><a href="#">Master Organization</a>
+</aside>
+<main>
+ <header><span>🔔</span><span>👤</span><button class="keluar">⇥ Keluar</button></header>
+ <h1>Detail Potensi Investasi</h1>
+ <section class="panel">
+  <div class="top"><span>Detail Potensi Investasi: SPKLU Jakarta Selatan</span><span>STATUS - OPEN</span></div>
+  <div class="cols">
+   <div>
+    <!-- Border 1: foto, luas lahan, status lahan, lokasi -->
+    <div class="box">
+     <div class="photo">
+      <img src="C:\BACKUP_REAL\iconGREEN\Prototype\spklu.png" alt="Deskripsi foto">
+     </div>
+     <div class="info">
+      <p>Luas Lahan : 350m2</p>
+      <p>Status Lahan : Hak Milik</p>
+      <p class="loc"><span>Lokasi :</span><span>Jalan Gatot Subroto, Jakarta Selatan</span></p>
+     </div>
+    </div>
+
+    <!-- Border 2: Minat & Booking -->
+    <div class="box booking">
+     <b>Minat &amp; Booking</b>
+     <div class="inv"><div class="ic">👥</div><div><small>Jumlah Investor Berminat / Booking:</small><b id="jml">48 Investor</b></div></div>
+     <div>Status Lahan : Open for Investment</div>
+     <button class="cta" id="book">Minat &amp; Booking</button>
+    </div>
+   </div>
+   <div>
+    <div class="docs">
+     <b>Dokumen Terkait</b>
+     <div class="doc"><div class="row"><div class="pdf"></div><div><b>RAB Mitra EPC (Engineering, Procurement, Construction)</b><span>Estimasi Biaya Pembangunan SPKLU</span></div></div><button class="dl">⬇ Unduh Dokumen</button></div>
+     <div class="doc"><div class="row"><div class="pdf"></div><div><b>RAB Mitra Maintenance (Operasional &amp; Perawatan)</b><span>Estimasi Biaya Pemeliharaan Tahunan</span></div></div><button class="dl">⬇ Unduh Dokumen</button></div>
+    </div>
+    <h2>Simulasi Sharing Profit &amp; BEP</h2>
+    <div class="sim">
+     <div class="donut" id="donut"></div>
+     <div class="legend" id="legend"></div>
+     <div>
+      <div class="ctrl">
+       <label for="i0">Investor</label><input id="i0" type="number" min="0" max="100" value="73">
+       <label for="i1">icon Green</label><input id="i1" type="number" min="0" max="100" value="15">
+       <label for="i2">Pemilik Lahan</label><input id="i2" type="number" min="0" max="100" value="10">
+       <label for="i3">Aplikasi</label><input id="i3" type="number" min="0" max="100" value="2">
+      </div>
+      <div class="warn" id="warn"></div>
+     </div>
+    </div>
+    <h2 style="margin-top:14px">Simulasi Proyeksi Keuangan &amp; BEP</h2>
+    <div class="fin">
+     <div><div>Investasi awal :<b>RP. 750.000.000</b></div>
+      <div class="formula"><b style="margin:0">Formula BEP Tahun =</b><div class="frac"><div>750.000.000</div><div id="den">( 300.000.000 - 50.000.000 ) x 73%</div></div></div></div>
+     <div>Estimasi Pendapatan Tahunan<b>RP. 300.000.000</b></div>
+     <div>Estimasi Biaya Operasional Tahunan<b>RP. 50.000.000</b>
+      <div class="bep">Proyeksi BEP :<b id="bep">4, 11 Tahun</b></div></div>
+    </div>
+   </div>
+  </div>
+ </section>
+</main>
+</div>
+<script>
+var names=["Investor","iconGreen","Pemilik Lahan","Aplikasi"],cols=["#3d7bd9","#2fa858","#f08a24","#8bc34a"];
+var inv=750e6,rev=300e6,opx=50e6,count=48;
+function fmt(n){return n.toLocaleString("id-ID")}
+function update(){
+ var v=[0,1,2,3].map(function(i){return Math.max(0,parseFloat(document.getElementById("i"+i).value)||0)});
+ var sum=v.reduce(function(a,b){return a+b},0);
+ document.getElementById("warn").textContent=sum!==100?"Total "+sum+"% (harus 100%)":"";
+ var acc=0,stops=v.map(function(x,i){var s=sum?acc/sum*100:0;acc+=x;var e=sum?acc/sum*100:0;return cols[i]+" "+s+"% "+e+"%"});
+ document.getElementById("donut").style.background="conic-gradient("+stops.join(",")+")";
+ document.getElementById("legend").innerHTML=v.map(function(x,i){return '<div><i style="background:'+cols[i]+'"></i>'+names[i]+" "+x+"%</div>"}).join("");
+ var share=v[0]/100,net=(rev-opx)*share;
+ document.getElementById("den").textContent="( "+fmt(rev)+" - "+fmt(opx)+" ) x "+v[0]+"%";
+ var el=document.getElementById("bep");
+ if(net<=0){el.textContent="-";return}
+ var y=inv/net,yr=Math.floor(y),mo=Math.round((y-yr)*12);
+ if(mo===12){yr++;mo=0}
+ el.textContent=yr+", "+mo+" Tahun";
+}
+["i0","i1","i2","i3"].forEach(function(id){document.getElementById(id).addEventListener("input",update)});
+document.getElementById("book").addEventListener("click",function(){
+ count++;this.textContent="Booking terkirim ✓";this.disabled=true;
+ document.getElementById("jml").textContent=count+" Investor";
+});
+update();
+</script>
+</body>
+</html>

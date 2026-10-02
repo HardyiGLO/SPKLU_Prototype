@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Workflow Checklist – PLN SPKLU</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --pln-blue:#1a3a8f; --pln-blue-dark:#132d72; --pln-blue-mid:#2148b0; --pln-yellow:#f5c518; --sidebar-w:220px; --top-h:56px; --bg:#f0f2f7; --surface:#fff; --border:#dde1ec; --text:#1c2340; --text-muted:#6b7394; --accent-purple:#5b4fcf; --stage-1:#3b82f6; --stage-2:#8b5cf6; --stage-3:#f59e0b; --stage-4:#10b981; --stage-5:#ef4444; --stage-6:#06b6d4; --stage-7:#f97316; --stage-8:#84cc16; --stage-9:#ec4899; }
+  body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; height:var(--top-h); background:var(--pln-blue); display:flex; align-items:center; justify-content:space-between; padding:0 20px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  .topbar-left { display:flex; align-items:center; gap:14px; }
+  .logo-box { width:38px; height:38px; background:var(--pln-yellow); border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:var(--pln-blue-dark); letter-spacing:-.5px; }
+  .topbar-title { color:#fff; font-size:15px; font-weight:600; }
+  .hamburger { background:none; border:none; cursor:pointer; color:#fff; font-size:20px; line-height:1; }
+  .topbar-right { display:flex; align-items:center; gap:14px; }
+  .topbar-right .icon-btn { background:rgba(255,255,255,.15); border:none; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer; font-size:16px; }
+  .logout-btn { background:var(--accent-purple); border:none; border-radius:6px; padding:6px 14px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; }
+  .shell { display:flex; padding-top:var(--top-h); min-height:100vh; }
+  .sidebar { width:var(--sidebar-w); flex-shrink:0; background:var(--pln-blue); min-height:calc(100vh - var(--top-h)); position:fixed; top:var(--top-h); left:0; bottom:0; overflow-y:auto; padding-bottom:24px; }
+  .sidebar::-webkit-scrollbar { width:4px; }
+  .sidebar::-webkit-scrollbar-thumb { background:rgba(255,255,255,.2); border-radius:4px; }
+  .nav-group { padding:18px 14px 4px; }
+  .nav-group-label { font-size:10px; font-weight:700; letter-spacing:.8px; color:rgba(255,255,255,.45); text-transform:uppercase; margin-bottom:4px; }
+  .nav-item { display:block; padding:7px 10px; border-radius:6px; color:rgba(255,255,255,.75); font-size:12.5px; font-weight:500; text-decoration:none; cursor:pointer; transition:background .15s; margin-bottom:1px; }
+  .nav-item:hover { background:rgba(255,255,255,.1); color:#fff; }
+  .nav-item.active { background:rgba(255,255,255,.18); color:#fff; font-weight:600; }
+  .main { margin-left:var(--sidebar-w); flex:1; padding:28px 28px 40px; min-height:calc(100vh - var(--top-h)); }
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .page-title { font-size:20px; font-weight:700; }
+  .refresh-btn { background:var(--surface); border:1px solid var(--border); border-radius:7px; padding:7px 14px; font-size:12.5px; font-weight:600; color:var(--pln-blue-mid); cursor:pointer; display:flex; align-items:center; gap:6px; transition:box-shadow .15s; }
+  .refresh-btn:hover { box-shadow:0 2px 8px rgba(0,0,0,.1); }
+  .tabs-bar { display:flex; gap:4px; overflow-x:auto; padding-bottom:2px; margin-bottom:20px; scrollbar-width:none; }
+  .tabs-bar::-webkit-scrollbar { display:none; }
+  .tab-btn { flex-shrink:0; padding:8px 16px; border-radius:8px 8px 0 0; border:1.5px solid transparent; background:#dde3f0; color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; white-space:nowrap; border-bottom:none; }
+  .tab-btn:hover { background:#c8d0e8; color:var(--text); }
+  .tab-btn.active { background:var(--surface); color:var(--text); border-color:var(--border); border-bottom-color:var(--surface); position:relative; top:1px; }
+  .tab-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+  .panel-card { background:var(--surface); border:1px solid var(--border); border-radius:0 10px 10px 10px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .stage-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .stage-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:.3px; }
+  .stage-title { font-size:16px; font-weight:700; }
+  .checklist-table { width:100%; border-collapse:collapse; }
+  .checklist-table th { text-align:left; font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; padding:10px 14px; border-bottom:2px solid var(--border); background:#f7f9fd; }
+  .checklist-table td { padding:12px 14px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  .checklist-table tr:last-child td { border-bottom:none; }
+  .checklist-table tr:hover td { background:#fafbfe; }
+  .activity-name { font-weight:500; }
+  .date-actual { font-size:12.5px; color:var(--text-muted); }
+  .date-actual.filled { color:var(--text); font-weight:500; }
+  .date-input { border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:12px; color:var(--text); font-family:inherit; background:var(--bg); cursor:pointer; }
+  .date-input:focus { outline:none; border-color:var(--pln-blue-mid); box-shadow:0 0 0 2px rgba(33,72,176,.12); }
+  .c1{background:var(--stage-1)} .b1{background:#dbeafe;color:#1d4ed8}
+  .c2{background:var(--stage-2)} .b2{background:#ede9fe;color:#5b21b6}
+  .c3{background:var(--stage-3)} .b3{background:#fef9c3;color:#854d0e}
+  .c4{background:var(--stage-4)} .b4{background:#d1fae5;color:#065f46}
+  .c5{background:var(--stage-5)} .b5{background:#fee2e2;color:#991b1b}
+  .c6{background:var(--stage-6)} .b6{background:#cffafe;color:#155e75}
+  .c7{background:var(--stage-7)} .b7{background:#ffedd5;color:#9a3412}
+  .c8{background:var(--stage-8)} .b8{background:#ecfccb;color:#3f6212}
+  .c9{background:var(--stage-9)} .b9{background:#fce7f3;color:#9d174d}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger">☰</button>
+    <div class="logo-box">PLN</div>
+    <span class="topbar-title">SPKLU Management System</span>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">👤</button>
+    <button class="logout-btn">↩ Keluar</button>
+  </div>
+</header>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="nav-group"><div class="nav-group-label">Dashboard</div>
+      <a class="nav-item" href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Potensi Lahan</div>
+      <a class="nav-item" href="#">Potensi Lahan Overview</a>
+      <a class="nav-item" href="#">Verifikasi Potensi Lahan</a>
+      <a class="nav-item" href="#">Survey Potensi Lahan</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Mitra Overview</div>
+      <a class="nav-item" href="#">Mitra EPC Overview</a>
+      <a class="nav-item" href="#">Mitra Mitra O&amp;M Overview</a>
+      <a class="nav-item" href="#">Mitra Lahan Overview</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Assigment</div>
+      <a class="nav-item" href="#">Assigment Potensi Lahan</a>
+      <a class="nav-item" href="#">Re-Assigment</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Potensi Investasi</div>
+      <a class="nav-item" href="#">Publish Potensi Investasi</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Investor</div>
+      <a class="nav-item" href="#">Daftar Potensi Investasi &amp; Booking</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Penawaran Potensi Investasi</div>
+      <a class="nav-item" href="#">Penawaran Investor</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Contract Management</div>
+      <a class="nav-item" href="#">Contract &amp; Support</a>
+      <a class="nav-item" href="#">Progross Konstruksi</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Workflow</div>
+      <a class="nav-item active" href="#">Workflow Checklist</a>
+      <a class="nav-item" href="#">Stage Gate</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Configurasi</div>
+      <a class="nav-item" href="#">Master Data</a>
+      <a class="nav-item" href="#">Authotization</a>
+      <a class="nav-item" href="#">Master User</a>
+      <a class="nav-item" href="#">Master Organization</a>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <div class="page-title">Workflow Checklist</div>
+      <button class="refresh-btn" onclick="refreshPage()">↻ Refresh</button>
+    </div>
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab(0)" id="tab-0"><span class="tab-dot c1"></span>Verifikasi Lahan</button>
+      <button class="tab-btn" onclick="switchTab(1)" id="tab-1"><span class="tab-dot c2"></span>Survey</button>
+      <button class="tab-btn" onclick="switchTab(2)" id="tab-2"><span class="tab-dot c3"></span>Assigment</button>
+      <button class="tab-btn" onclick="switchTab(3)" id="tab-3"><span class="tab-dot c4"></span>Survey Pemasangan</button>
+      <button class="tab-btn" onclick="switchTab(4)" id="tab-4"><span class="tab-dot c5"></span>Verifikasi RAB</button>
+      <button class="tab-btn" onclick="switchTab(5)" id="tab-5"><span class="tab-dot c6"></span>Final RAB</button>
+      <button class="tab-btn" onclick="switchTab(6)" id="tab-6"><span class="tab-dot c7"></span>Deal</button>
+      <button class="tab-btn" onclick="switchTab(7)" id="tab-7"><span class="tab-dot c8"></span>Konstruksi</button>
+      <button class="tab-btn" onclick="switchTab(8)" id="tab-8"><span class="tab-dot c9"></span>SPKLU Live</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-0">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b1">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Mitra Submit Pengajuan Lahan</td><td><span class="date-actual filled">12 Sep 2025</span></td></tr>
+            <tr><td>2</td><td class="activity-name">Hasil Verifikasi Pengajuan Lahan :Approve/ Reject</td><td><input type="date" class="date-input" value="2025-09-20"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-1">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b2">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Mitra ICG Submit Janji Survey Lahan</td><td><span class="date-actual filled">18 Sep 2025</span></td></tr>
+            <tr><td>2</td><td class="activity-name">Mitra ICG Input Hasil Survey & Keputusan : Approve / Reject </td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-2">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b3">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">ICG Melakukan Assigment</td><td><span class="date-actual filled">22 Sep 2025</span></td></tr>
+            <tr><td>2</td><td class="activity-name">Konfirmasi Mitra</td><td><span class="date-actual filled">24 Sep 2025</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-3">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b4">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Confirm Mitra & Janji Survey Lahan oleh mitra EPC </td><td><span class="date-actual filled">01 Oct 2025</span></td></tr>
+             <tr><td>1</td><td class="activity-name">ICG Confirm Survey dari mitra EPC </td><td><span class="date-actual filled">01 Oct 2025</span></td></tr>
+            <tr><td>2</td><td class="activity-name">Confirm Minat oleh Mitra O&amp;M</td><td><input type="date" class="date-input" value="2025-10-10"></td></tr>
+            <tr><td>3</td><td class="activity-name">Mitra Input Hasil Survey dan RAB</td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-4">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b5">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Verifikasi RAB Mitra by ICG</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>1</td><td class="activity-name">Keputusan Verifikasi RAB : Approved / Reject</td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-5">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b6">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Pemilihan Final RAB</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>2</td><td class="activity-name">Generate WO</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>3</td><td class="activity-name">Publish Potensi Investasi</td><td><input type="date" class="date-input"></td></tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-6">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b7">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Investor Minat &amp; Booking</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>2</td><td class="activity-name">Approval Booking by ICG</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>3</td><td class="activity-name">Investor Submit Penawaran</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>3</td><td class="activity-name">ICG pilih investor</td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-7">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b8">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Pembuatan Data Kontrak</td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-8">
+      <div class="panel-card">
+        <div class="stage-header">
+          <span class="stage-badge b9">No Potensi Pengajuan Lahan</span>
+          <div><div class="stage-title">PGJ/2026/05/-01</div></div>
+        </div>
+        <table class="checklist-table">
+          <thead><tr><th>#</th><th>Aktivitas</th><th>Tanggal Aktual</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="activity-name">Finalisasi Kontrak</td><td><input type="date" class="date-input"></td></tr>
+            <tr><td>2</td><td class="activity-name">SPKLU Live</td><td><input type="date" class="date-input"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+  function switchTab(idx) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  }
+  function refreshPage() {
+    const btn = document.querySelector('.refresh-btn');
+    btn.textContent = '↻ Memuat...';
+    setTimeout(() => { btn.textContent = '↻ Refresh'; }, 1000);
+  }
+</script>
+</body>
+</html>

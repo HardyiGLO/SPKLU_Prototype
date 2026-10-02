@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPKLU PLN - Login</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+body { font-family: Arial, Helvetica, sans-serif; overflow: hidden; }
+
+/* MAIN PAGE */
+.page { position: relative; width: 100%; min-height: 100vh; overflow: hidden; background: #0a2a4a; }
+
+/* BACKGROUND SPKLU (ilustrasi SVG inline) */
+.bg-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.bolt-glow { animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* HEADER */
+header { position: absolute; top: 0; left: 0; right: 0; height: 46px; z-index: 1000; }
+.logo { width: 96px; height: 34px; object-fit: contain; padding: 3px 8px; border-radius: 6px; background: #fff; }
+nav { position: absolute; inset: 0; height: 46px; display: flex; align-items: center; justify-content: flex-end; gap: 44px; padding-right: 110px; background: #5d92df; }
+nav a { color: #fff; text-decoration: none; font-size: 14px; font-weight: 700; transition: all .2s ease; }
+nav a:hover { opacity: .75; }
+nav a.active { border-bottom: 2px solid #ffdd2e; padding-bottom: 2px; }
+
+/* LOGIN CARD */
+.login-card { position: absolute; z-index: 20; top: 22%; left: 50%; transform: translateX(-50%);
+  width: min(58vw, 716px); min-width: 520px; height: 576px; padding-top: 44px;
+  border: 1px solid rgba(255,255,255,.35); border-radius: 11px;
+  background: rgba(10, 40, 70, .45); box-shadow: 0 8px 30px rgba(0,0,0,.30);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+h1 { text-align: center; color: #fff; font-size: 23px; font-weight: 800; margin-bottom: 115px; text-shadow: 0 2px 5px rgba(0,0,0,.40); }
+h1 span { color: #ffdd2e; }
+.tagline { text-align: center; color: #cfe3ff; font-size: 13px; margin: -100px 0 70px; }
+
+/* FORM */
+.form { width: 258px; margin: 0 auto; }
+.field { position: relative; margin-bottom: 17px; }
+.field input { width: 100%; height: 38px; padding: 0 12px 0 38px; border: 1px solid #687985; border-radius: 6px;
+  background: rgba(245,248,249,.90); color: #333; font-size: 15px; outline: none; transition: all .2s ease; }
+.field input::placeholder { color: #68737a; }
+.field input:focus { border-color: #3166bd; background: #fff; box-shadow: 0 0 0 2px rgba(49,102,189,.15); }
+.icon { position: absolute; left: 10px; top: 9px; width: 20px; color: #1d2f38; font-size: 16px; text-align: center; z-index: 2; }
+button.btn-login { width: 100%; height: 38px; border: none; border-radius: 6px; background: #3166bd; color: #fff; font-size: 17px; font-weight: 800; cursor: pointer; transition: all .2s ease; }
+button.btn-login:hover { background: #2859aa; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.20); }
+button.btn-login:active { transform: translateY(0); }
+
+/* DROPDOWN REGISTRASI MITRA */
+.dropdown { position: relative; }
+.dropdown-toggle::after { content: " ▾"; font-size: 11px; }
+.dropdown-menu { display: none; position: absolute; top: calc(100% + 14px); right: 0; min-width: 300px;
+  padding: 6px 0; background: #fff; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.30); z-index: 50; }
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu a { display: block; padding: 11px 18px; color: #1d2f38; font-size: 13px; font-weight: 700; }
+.dropdown-menu a:hover { background: #e8f0fc; color: #3166bd; opacity: 1; }
+
+/* ===== PETA SEBARAN SPKLU ===== */
+#mapView { display: none; position: absolute; top: 46px; left: 0; right: 0; bottom: 0; z-index: 25;
+  overflow-y: auto; background: #eef3fa; padding: 18px 24px 30px; }
+body.show-map #mapView { display: block; }
+body.show-map .login-card { display: none; }
+.map-title { color: #0a2a4a; font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+.map-title small { display: block; font-size: 12px; font-weight: 400; color: #5a6b7b; margin-top: 2px; }
+.map-wrap{position:relative;isolation:isolate;height:460px;overflow:hidden;border-radius:10px;border:1px solid #c3d1e3;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+#map{position:absolute;inset:0;background:#cfe3ef}
+.legend{position:absolute;left:14px;bottom:24px;z-index:500;background:#fff;border-radius:10px;padding:10px 14px;font-size:11px;line-height:1.7;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.legend .h{background:#1f3352;color:#fff;font-size:11px;padding:2px 8px;border-radius:4px 4px 0 0;margin:-10px -14px 8px}
+.legend .row{display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);flex-shrink:0}
+.dot.t{background:#1d9bb0}.dot.o{background:#f0a52a}
+.totals{position:absolute;right:14px;bottom:24px;z-index:500;background:#fff;border-radius:22px;padding:8px 16px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.totals b{margin-right:18px}.totals b:last-child{margin-right:0}
+.spklu-pin{width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.spklu-pin.t{background:#1d9bb0}.spklu-pin.o{background:#f0a52a}
+.spklu-pin:after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+.leaflet-popup-content{font:12px/1.5 "Segoe UI",Arial,sans-serif;margin:10px 12px}
+.leaflet-popup-content b{display:block;font-size:13px}
+
+.panel { margin-top: 16px; background: #fff; border-radius: 10px; padding: 16px 18px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.panel h2 { font-size: 14px; color: #0a2a4a; margin-bottom: 10px; }
+.filters { display: flex; gap: 16px; flex-wrap: wrap; }
+.filters label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #3a4a5a; flex: 1; min-width: 200px; }
+.filters select { height: 38px; border: 1px solid #687985; border-radius: 6px; padding: 0 10px; font-size: 14px; background: #f5f8f9; color: #1d2f38; }
+.filters select:focus { outline: none; border-color: #3166bd; box-shadow: 0 0 0 2px rgba(49,102,189,.15); }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.stat { background: #fff; border-radius: 10px; padding: 16px 18px; border-left: 5px solid #3166bd; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.stat:nth-child(2) { border-color: #1fa463; }
+.stat:nth-child(3) { border-color: #e6b800; }
+.stat .label { font-size: 12px; font-weight: 700; color: #5a6b7b; text-transform: uppercase; letter-spacing: .3px; }
+.stat .value { margin-top: 6px; font-size: 24px; font-weight: 800; color: #0a2a4a; }
+
+/* TABLET */
+@media (max-width: 800px) {
+  nav { gap: 16px; padding-right: 20px; }
+  nav a { font-size: 11px; }
+  .login-card { width: 82vw; min-width: 0; height: 500px; top: 20%; }
+  h1 { font-size: 19px; margin-bottom: 80px; }
+  .tagline { margin: -65px 0 50px; }
+  .form { width: 72%; }
+  .stats { grid-template-columns: 1fr; }
+  #mapView { padding: 14px; }
+}
+/* MOBILE */
+@media (max-width: 500px) {
+  header { height: 40px; }
+  #mapView { top: 40px; }
+  .logo { width: 70px; height: 28px; padding: 2px 6px; }
+  nav { height: 40px; gap: 10px; padding-right: 10px; }
+  nav a { font-size: 9px; }
+  .login-card { top: 18%; width: 90vw; min-width: 0; height: 430px; padding-top: 35px; }
+  h1 { font-size: 17px; margin-bottom: 60px; }
+  .tagline { margin: -45px 0 40px; font-size: 12px; }
+  .form { width: 75%; }
+  .field input, button.btn-login { height: 36px; }
+  .dropdown-menu { position: fixed; top: 40px; left: 10px; right: 10px; min-width: 0; }
+  .dropdown-menu a { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- BACKGROUND: SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) -->
+  <svg class="bg-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#06203a"/><stop offset=".6" stop-color="#0f4d7a"/><stop offset="1" stop-color="#1b8aa6"/>
+      </linearGradient>
+      <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1c2b38"/><stop offset="1" stop-color="#0d151c"/>
+      </linearGradient>
+      <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+        <stop offset="0" stop-color="#ffe45c" stop-opacity=".8"/><stop offset="1" stop-color="#ffe45c" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1440" height="900" fill="url(#sky)"/>
+
+    <!-- skyline kota -->
+    <g fill="#0a3558" opacity=".75">
+      <rect x="40" y="520" width="90" height="260"/><rect x="140" y="450" width="70" height="330"/>
+      <rect x="220" y="560" width="110" height="220"/><rect x="340" y="490" width="60" height="290"/>
+      <rect x="1030" y="500" width="80" height="280"/><rect x="1120" y="430" width="90" height="350"/>
+      <rect x="1220" y="540" width="70" height="240"/><rect x="1300" y="470" width="110" height="310"/>
+    </g>
+    <g fill="#ffe45c" opacity=".55">
+      <rect x="156" y="480" width="8" height="8"/><rect x="176" y="520" width="8" height="8"/>
+      <rect x="1140" y="470" width="8" height="8"/><rect x="1170" y="520" width="8" height="8"/>
+      <rect x="1330" y="510" width="8" height="8"/><rect x="1360" y="560" width="8" height="8"/>
+    </g>
+
+    <!-- jalan -->
+    <rect y="780" width="1440" height="120" fill="url(#road)"/>
+    <g fill="#ffffff" opacity=".5">
+      <rect x="60" y="850" width="90" height="6"/><rect x="260" y="850" width="90" height="6"/>
+      <rect x="1090" y="850" width="90" height="6"/><rect x="1290" y="850" width="90" height="6"/>
+    </g>
+
+    <!-- SPKLU kiri -->
+    <g transform="translate(120,520)">
+      <circle cx="60" cy="90" r="150" fill="url(#glow)" class="bolt-glow"/>
+      <rect x="0" y="0" width="120" height="260" rx="14" fill="#f4f7fa"/>
+      <rect x="0" y="0" width="120" height="46" rx="14" fill="#3166bd"/>
+      <text x="60" y="30" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#fff">SPKLU</text>
+      <rect x="16" y="64" width="88" height="56" rx="6" fill="#0d2a44"/>
+      <path d="M66 70 L46 100 H62 L54 116 L78 84 H62 Z" fill="#ffdd2e" class="bolt-glow"/>
+      <circle cx="60" cy="150" r="14" fill="#cfd8e0"/><circle cx="60" cy="150" r="7" fill="#3166bd"/>
+      <path d="M104 170 C150 170 150 235 120 245" stroke="#16212b" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <rect x="-10" y="252" width="140" height="10" rx="3" fill="#8a97a3"/>
+    </g>
+
+    <!-- mobil listrik + SPKLU kanan -->
+    <g transform="translate(1000,520)">
+      <circle cx="260" cy="120" r="170" fill="url(#glow)" class="bolt-glow"/>
+      <rect x="330" y="0" width="100" height="260" rx="14" fill="#f4f7fa"/>
+      <rect x="330" y="0" width="100" height="42" rx="14" fill="#3166bd"/>
+      <text x="380" y="28" text-anchor="middle" font-family="Arial" font-weight="800" font-size="16" fill="#fff">PLN</text>
+      <path d="M390 70 L368 104 H384 L376 124 L402 88 H386 Z" fill="#ffdd2e" class="bolt-glow"/>
+      <rect x="320" y="252" width="120" height="10" rx="3" fill="#8a97a3"/>
+      <!-- mobil -->
+      <path d="M10 235 L30 175 Q40 150 70 148 L150 148 Q180 100 220 100 L270 100 Q300 105 315 150 L325 170 Q332 180 332 200 L332 235 Z" fill="#e8eef4"/>
+      <path d="M170 150 Q195 118 225 118 L262 118 Q282 124 292 150 Z" fill="#1d3b57"/>
+      <circle cx="90" cy="238" r="30" fill="#111c25"/><circle cx="90" cy="238" r="13" fill="#9aa8b4"/>
+      <circle cx="260" cy="238" r="30" fill="#111c25"/><circle cx="260" cy="238" r="13" fill="#9aa8b4"/>
+      <path d="M332 190 C345 190 345 190 360 185" stroke="#16212b" stroke-width="6" fill="none"/>
+      <path d="M345 128 L331 150 H341 L336 164 L352 142 H342 Z" fill="#ffdd2e" class="bolt-glow" transform="translate(-30,40)"/>
+    </g>
+  </svg>
+
+  <header>
+    <nav>
+      <a href="#" id="navBeranda" class="active">Beranda</a>
+      <a href="#" id="navPeta">Peta Sebaran SPKLU</a>
+
+      <!-- DROPDOWN REGISTRASI MITRA -->
+      <div class="dropdown" id="dropdownMitra">
+        <a href="#" class="dropdown-toggle" id="btnMitra">Registrasi Mitra</a>
+        <div class="dropdown-menu">
+          <a href="pendaftaran-mitra-epc.html">Registrasi Mitra EPC</a>
+          <a href="Pendaftaran_Mitra_O_M_-_PLN.html">Registrasi Mitra Operation &amp; Maintenance</a>
+          <a href="Pendaftaran_Mitra_Lahan_-_PLN_SPKLU.html">Registrasi Mitra Lahan</a>
+        </div>
+      </div>
+
+      <a href="Dashboard Pengelolaan Lahan SPKLU.html">Login</a>
+      <img class="logo" src="C:\BACKUP_REAL\iconGREEN\Prototype\Logo PLN.png" alt="Logo PLN">
+    </nav>
+  </header>
+
+  <div class="login-card">
+    <h1>SELAMAT DATANG DI SPKLU <span>PLN</span></h1>
+    <p class="tagline">Stasiun Pengisian Kendaraan Listrik Umum</p>
+
+    <form class="form" onsubmit="login(event)">
+      <div class="field">
+        <span class="icon">👤</span>
+        <input type="text" id="username" placeholder="Username" autocomplete="username">
+      </div>
+      <div class="field">
+        <span class="icon">🔒</span>
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+      </div>
+      <button class="btn-login">  LOGIN</button>
+    </form>
+  </div>
+
+  <!-- ===== VIEW: PETA SEBARAN SPKLU ===== -->
+  <section id="mapView">
+    <div class="map-title">Peta Sebaran SPKLU Indonesia
+      <small>Klik pin untuk melihat detail lokasi.</small>
+    </div>
+
+    <div class="map-wrap">
+      <div id="map" role="img" aria-label="Peta sebaran SPKLU aktif dan potensi SPKLU baru di Indonesia"></div>
+      <div class="legend">
+        <div class="h">Keterangan</div>
+        <div class="row"><span class="dot t"></span>SPKLU Aktif</div>
+        <div class="row"><span class="dot o"></span>Potensi SPKLU Baru</div>
+      </div>
+      <div class="totals"><b>Aktif: <span id="cAktif">0</span></b><b>Potensi: <span id="cBaru">0</span></b></div>
+    </div>
+
+    <!-- 1. Filter -->
+    <div class="panel">
+      <h2>Filter</h2>
+      <div class="filters">
+        <label>Region
+          <select id="fRegion"><option value="">Semua Region</option></select>
+        </label>
+        <label>Province
+          <select id="fProvince"><option value="">Semua Province</option></select>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. Informasi -->
+    <div class="stats">
+      <div class="stat"><div class="label">Total Potensi Investasi</div><div class="value" id="sInvest">-</div></div>
+      <div class="stat"><div class="label">Total SPKLU Aktif</div><div class="value" id="sAktif">-</div></div>
+      <div class="stat"><div class="label">Total Potensi SPKLU</div><div class="value" id="sPotensi">-</div></div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
+<script>
+//--function login(event) {
+  //--event.preventDefault();
+  //--const username = document.getElementById("username").value.trim();
+  //--const password = document.getElementById("password").value;
+  //--if (!username || !password) {
+   //-- alert("Username dan Password wajib diisi.");
+    //--return;
+  //--}
+  //--console.log({ username: username, password: password });
+  //--alert("Form login siap diintegrasikan dengan backend.");
+//--}
+
+/* Dropdown Registrasi Mitra */
+const dropdownMitra = document.getElementById("dropdownMitra");
+document.getElementById("btnMitra").addEventListener("click", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  dropdownMitra.classList.toggle("open");
+});
+document.addEventListener("click", function (e) {
+  if (!dropdownMitra.contains(e.target)) dropdownMitra.classList.remove("open");
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") dropdownMitra.classList.remove("open");
+});
+
+/* ===== PETA SEBARAN SPKLU ===== */
+/* Data titik (contoh) - ganti dengan data asli / hasil fetch API.
+   Format: [nama kota, lat, lng, region, province, tipe]  tipe: a = SPKLU Aktif, b = Potensi SPKLU Baru */
+const SPKLU = [
+["Jakarta Pusat",-6.186,106.834,"Jawa","DKI Jakarta","a"],["Jakarta Selatan",-6.261,106.81,"Jawa","DKI Jakarta","a"],
+["Jakarta Barat",-6.168,106.764,"Jawa","DKI Jakarta","a"],["Bekasi",-6.238,106.992,"Jawa","Jawa Barat","a"],
+["Depok",-6.402,106.794,"Jawa","Jawa Barat","a"],["Tangerang",-6.178,106.63,"Jawa","Banten","a"],
+["Bogor",-6.595,106.816,"Jawa","Jawa Barat","a"],["Bandung",-6.917,107.619,"Jawa","Jawa Barat","a"],
+["Semarang",-6.966,110.42,"Jawa","Jawa Tengah","a"],["Yogyakarta",-7.797,110.37,"Jawa","DI Yogyakarta","a"],
+["Surabaya",-7.257,112.752,"Jawa","Jawa Timur","a"],["Malang",-7.966,112.633,"Jawa","Jawa Timur","a"],
+["Medan",3.595,98.672,"Sumatera","Sumatera Utara","a"],["Palembang",-2.976,104.775,"Sumatera","Sumatera Selatan","a"],
+["Padang",-0.947,100.417,"Sumatera","Sumatera Barat","a"],["Denpasar",-8.67,115.212,"Bali & Nusa Tenggara","Bali","a"],
+["Balikpapan",-1.238,116.828,"Kalimantan","Kalimantan Timur","a"],["Makassar",-5.147,119.432,"Sulawesi","Sulawesi Selatan","a"],
+["Pekanbaru",0.507,101.447,"Sumatera","Riau","a"],["Lampung",-5.429,105.262,"Sumatera","Lampung","a"],
+["Manado",1.474,124.842,"Sulawesi","Sulawesi Utara","a"],
+["Cirebon",-6.706,108.557,"Jawa","Jawa Barat","b"],["Solo",-7.566,110.828,"Jawa","Jawa Tengah","b"],
+["Kediri",-7.848,112.017,"Jawa","Jawa Timur","b"],["Serang",-6.12,106.15,"Jawa","Banten","b"],
+["Banyuwangi",-8.219,114.369,"Jawa","Jawa Timur","b"],["Purwokerto",-7.424,109.239,"Jawa","Jawa Tengah","b"],
+["Banda Aceh",5.548,95.324,"Sumatera","Aceh","b"],["Jambi",-1.61,103.613,"Sumatera","Jambi","b"],
+["Bengkulu",-3.8,102.266,"Sumatera","Bengkulu","b"],["Batam",1.045,104.03,"Sumatera","Kepulauan Riau","b"],
+["Pematangsiantar",2.96,99.069,"Sumatera","Sumatera Utara","b"],["Bandar Lampung Utara",-4.85,104.9,"Sumatera","Lampung","b"],
+["Pontianak",-0.027,109.343,"Kalimantan","Kalimantan Barat","b"],["Banjarmasin",-3.319,114.591,"Kalimantan","Kalimantan Selatan","b"],
+["Samarinda",-0.502,117.154,"Kalimantan","Kalimantan Timur","b"],["Palangkaraya",-2.21,113.917,"Kalimantan","Kalimantan Tengah","b"],
+["Tarakan",3.3,117.633,"Kalimantan","Kalimantan Utara","b"],["Palu",-0.895,119.87,"Sulawesi","Sulawesi Tengah","b"],
+["Kendari",-3.978,122.515,"Sulawesi","Sulawesi Tenggara","b"],["Gorontalo",0.544,123.059,"Sulawesi","Gorontalo","b"],
+["Mataram",-8.583,116.117,"Bali & Nusa Tenggara","Nusa Tenggara Barat","b"],["Kupang",-10.178,123.597,"Bali & Nusa Tenggara","Nusa Tenggara Timur","b"],
+["Labuan Bajo",-8.497,119.888,"Bali & Nusa Tenggara","Nusa Tenggara Timur","b"],["Ambon",-3.696,128.181,"Papua & Maluku","Maluku","b"],
+["Jayapura",-2.533,140.717,"Papua & Maluku","Papua","b"],["Sorong",-0.876,131.255,"Papua & Maluku","Papua Barat Daya","b"],
+["Ternate",0.789,127.376,"Papua & Maluku","Maluku Utara","b"]
+].map(d => ({ nama:(d[5]==="a"?"SPKLU ":"Lahan ")+d[0], lat:d[1], lng:d[2], region:d[3], prov:d[4], tipe:d[5]==="a"?"aktif":"baru" }));
+
+const INVEST_PER_SPKLU = 1.5; /* Rp Miliar per potensi SPKLU baru - asumsi contoh, ganti dengan data asli */
+
+const fRegion = document.getElementById("fRegion");
+const fProvince = document.getElementById("fProvince");
+const fmt = n => n.toLocaleString("id-ID");
+const fmtRp = m => m >= 1000 ? "Rp " + (m/1000).toLocaleString("id-ID",{maximumFractionDigits:2}) + " Triliun"
+                             : "Rp " + m.toLocaleString("id-ID",{maximumFractionDigits:1}) + " Miliar";
+
+let map = null, layer = null;
+
+function initFilters() {
+  [...new Set(SPKLU.map(d => d.region))].forEach(r => fRegion.add(new Option(r, r)));
+  fillProvinces();
+}
+function fillProvinces() {
+  fProvince.length = 1;
+  [...new Set(SPKLU.filter(d => !fRegion.value || d.region === fRegion.value).map(d => d.prov))].sort()
+    .forEach(v => fProvince.add(new Option(v, v)));
+}
+function filtered() {
+  return SPKLU.filter(d => (!fRegion.value || d.region === fRegion.value) &&
+                           (!fProvince.value || d.prov === fProvince.value));
+}
+function render() {
+  const rows = filtered();
+  layer.clearLayers();
+  let a = 0, b = 0;
+  rows.forEach(p => {
+    const cls = p.tipe === "aktif" ? "t" : "o";
+    p.tipe === "aktif" ? a++ : b++;
+    const icon = L.divIcon({ className:"", html:'<div class="spklu-pin '+cls+'"></div>', iconSize:[22,22], iconAnchor:[11,22], popupAnchor:[0,-22] });
+    L.marker([p.lat, p.lng], { icon })
+      .bindPopup("<b>"+p.nama+"</b>"+(p.tipe==="aktif"?"SPKLU Aktif":"Potensi SPKLU Baru")+"<br>"+p.prov+", "+p.region)
+      .addTo(layer);
+  });
+  document.getElementById("cAktif").textContent = a;
+  document.getElementById("cBaru").textContent = b;
+  document.getElementById("sAktif").textContent = fmt(a);
+  document.getElementById("sPotensi").textContent = fmt(b);
+  document.getElementById("sInvest").textContent = fmtRp(b * INVEST_PER_SPKLU);
+  if (rows.length === 1) map.setView([rows[0].lat, rows[0].lng], 9);
+  else if (rows.length > 1 && (fRegion.value || fProvince.value)) map.fitBounds(rows.map(d => [d.lat, d.lng]), { padding:[50,50], maxZoom:8 });
+  else map.setView([-2.5, 118], 5);
+}
+
+/* Peta dasar: OpenFreeMap (vector tile, data OpenStreetMap) - gratis, tanpa API key, jalan dari file:// */
+const ATRIBUSI = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data dari <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+function webglDidukung(){
+  try { return !!document.createElement("canvas").getContext("webgl2"); } catch(e) { return false; }
+}
+function initMap() {
+  if (map) { map.invalidateSize(); return; }
+  if (typeof L === "undefined") {
+    document.getElementById("map").innerHTML = "<p style='padding:20px'>Library peta gagal dimuat. Periksa koneksi internet.</p>";
+    return;
+  }
+  map = L.map("map", { zoomControl:true, scrollWheelZoom:false }).setView([-2.5, 118], 5);
+  if (window.maplibregl && L.maplibreGL && webglDidukung()) {
+    L.maplibreGL({ style:"https://tiles.openfreemap.org/styles/liberty", attribution:ATRIBUSI }).addTo(map);
+  } else {
+    /* Cadangan: tile OSM standar hanya jalan lewat http://localhost (bukan file://) */
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+  }
+  layer = L.layerGroup().addTo(map);
+  initFilters();
+  render();
+}
+
+fRegion.addEventListener("change", () => { fillProvinces(); fProvince.value = ""; render(); });
+fProvince.addEventListener("change", render);
+
+const navBeranda = document.getElementById("navBeranda");
+const navPeta = document.getElementById("navPeta");
+navPeta.addEventListener("click", function (e) {
+  e.preventDefault();
+  document.body.classList.add("show-map");
+  navPeta.classList.add("active"); navBeranda.classList.remove("active");
+  initMap();
+  setTimeout(() => map && map.invalidateSize(), 50);
+});
+navBeranda.addEventListener("click", function (e) {
+  e.preventDefault();
+  document.body.classList.remove("show-map");
+  navBeranda.classList.add("active"); navPeta.classList.remove("active");
+});
+</script>
+</body>
+</html>

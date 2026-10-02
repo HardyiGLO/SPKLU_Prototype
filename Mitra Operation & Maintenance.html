@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mitra Operation & Maintenance</title>
+<style>
+:root{--bg:#e6e6e6;--card:#fff;--text:#1a1a1a;--muted:#666;--line:#e5e5e5;--blue:#2f5aa8;--side:#2f5aa8;--bar:#c5dafc;--field:#e8e8e8;--purple:#6d2fd8;--red:#c00d0d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d22;--card:#262a31;--text:#eee;--muted:#aaa;--line:#3a3f48;--bar:#2b3a57;--field:#3a3f48}}
+:root[data-theme="dark"]{--bg:#1b1d22;--card:#262a31;--text:#eee;--muted:#aaa;--line:#3a3f48;--bar:#2b3a57;--field:#3a3f48}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Open Sans",system-ui,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.layout{display:flex;min-height:100vh}
+aside{width:200px;flex:none;background:var(--side);color:#fff;padding:14px 0;font-size:12px}
+.logo{background:#fff;color:#1a6fb5;font-weight:800;letter-spacing:3px;margin:0 16px 14px;padding:6px 10px;width:82px;font-size:15px;border:1px solid #ddd}
+aside h4{margin:12px 12px 2px;font-size:12px}
+aside a{display:block;padding:4px 12px 4px 30px;color:#fff;text-decoration:none;cursor:pointer}
+aside a:hover{background:rgba(255,255,255,.15)}
+main{flex:1;min-width:0}
+header{background:var(--card);height:46px;display:flex;justify-content:flex-end;align-items:center;gap:20px;padding:0 16px;border-bottom:1px solid var(--line)}
+.menu-btn{display:none;margin-right:auto;background:none;border:0;font-size:22px;color:var(--text)}
+.out{background:var(--purple);color:#fff;border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700}
+.content{padding:8px 10px 24px}
+h1{font-size:20px;margin:0 0 10px}
+.panel{background:var(--card);padding:10px 14px 30px;min-height:420px}
+.panel h3{margin:0;font-size:12px;color:var(--blue);padding:6px 0 8px;border-bottom:1px solid #bbb}
+.bar{background:var(--bar);margin-top:20px;padding:8px 14px;text-align:right;color:var(--blue);font-weight:700}
+.bar button{background:none;border:0;color:inherit;font-weight:700;cursor:pointer}
+.grid{border:1px solid var(--line);border-radius:10px;margin-top:40px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600}
+td.n{color:var(--muted)}
+.dots{background:none;border:0;cursor:pointer;color:var(--text);font-size:14px;letter-spacing:1px;padding:2px 6px;border-radius:4px}
+.dots:hover{background:var(--line)}
+.pop{position:fixed;z-index:20;display:none;width:250px;background:var(--card);border:2px solid #333;border-radius:14px;padding:12px 16px 16px}
+.pop.show{display:block}
+.pop h5{margin:0 0 6px;font-size:16px;color:#5b9af5;border-bottom:2px solid #333;padding-bottom:6px}
+.pop button{background:none;border:0;color:var(--text);font-size:14px;font-weight:700;cursor:pointer;padding:8px 0;font-family:inherit}
+.pop button:hover{color:var(--blue)}
+.pop button:before{content:"• ";margin-right:6px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;overflow:auto;z-index:30;padding:20px 10px}
+.overlay.show{display:flex}
+.modal{background:var(--card);width:100%;max-width:640px;padding:18px 24px 24px;border-radius:4px}
+.modal h2{margin:0;font-size:16px;color:var(--blue);padding-bottom:10px;border-bottom:1px solid #888}
+.ph{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+.ph h3{margin:0;font-size:16px}
+.dl span.chip{background:var(--field);padding:3px 10px;margin:0 8px}
+.dl b{color:#c00}
+label{display:block;font-size:12px;margin:12px 0 4px}
+input[type=text],select{width:100%;padding:10px 12px;border:0;border-radius:4px;background:var(--field);color:var(--text);font:inherit}
+select{border:1px solid #333;border-radius:6px;padding:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.imgs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.imgs div{aspect-ratio:1/.9;background:#f2eee8;display:flex;align-items:center;justify-content:center;color:#5a4d40;font-size:34px}
+.up{display:flex;gap:10px;align-items:center}
+.up .btn{background:var(--purple);color:#fff;padding:10px 24px;border-radius:4px;font-weight:700;cursor:pointer}
+.up input[type=file]{display:none}
+.up .fn{flex:1;background:#f2f2f8;color:#333;padding:10px 12px;border:1px solid var(--line);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.acts{display:flex;justify-content:flex-end;gap:16px;margin-top:40px}
+.acts button{border:0;color:#fff;font-weight:700;padding:10px 0;width:120px;cursor:pointer;font-size:12px;font-family:inherit}
+.ok{background:#2f5aa8}.cl{background:var(--red)}
+.err{color:#c00;font-size:11px;display:none;margin-top:4px}
+@media (max-width:800px){
+aside{position:fixed;inset:0 auto 0 0;z-index:10;transform:translateX(-100%);transition:.2s;overflow:auto}
+aside.open{transform:none}
+.menu-btn{display:block}
+.row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside id="side">
+  <div class="logo">PLN</div>
+  <h4>Dashboard</h4><a>Dashboard Pengelolaan Lahan SPKLU</a>
+  <h4>Potensi Lahan</h4><a>Potensi Lahan Overview</a><a>Verifikasi Potensi Lahan</a><a>Survey Potensi Lahan</a>
+  <h4>Mitra Overview</h4><a>Mitra EPC Overview</a><a>Mitra Mitra O&amp;M Overview</a><a>Mitra Lahan Overview</a>
+  <h4>Assigment</h4><a>Assigment Potensi Lahan</a><a>Re-Assigment</a>
+  <h4>Potensi Investasi</h4><a>Publish Potensi Investasi</a>
+  <h4>Investor</h4><a>Daftar Potensi Investasi &amp; Booking</a>
+  <h4>Penawaran Potensi Investasi</h4><a>Penawaran Investor</a>
+  <h4>Contract Management</h4><a>Contract &amp; Support</a><a>Progross Konstruksi</a>
+  <h4>Workflow</h4><a>Workflow checklist</a><a>Stage Gate</a>
+  <h4>Configurasi</h4><a>Master Data</a><a>Authotization</a><a>Master User</a><a>Master Organization</a>
+</aside>
+<main>
+  <header>
+    <button class="menu-btn" onclick="document.getElementById('side').classList.toggle('open')" aria-label="Menu">☰</button>
+    <span>🔔</span><span>👤</span><span class="out">➜ Keluar</span>
+  </header>
+  <div class="content">
+    <h1>Mitra Operation &amp; Maintenance</h1>
+    <div class="panel">
+      <h3>Mitra Operation &amp; Maintenance</h3>
+      <div class="bar"><button onclick="location.reload()">⟳ Refresh</button></div>
+      <div class="grid">
+        <table>
+          <thead><tr><th></th><th>Action</th><th>Nomo Proposal</th><th>Assig Date</th><th>Start &amp; End Confirm</th><th>Days</th><th>Status</th></tr></thead>
+          <tbody id="tb">
+            <tr data-range="21 Sep 26 to 23 Sep 26" data-days="4 days"><td class="n">1</td><td><button class="dots">:::</button></td><td>PGJ/2026/05/-01</td><td>Sep 1, 2026</td><td>Sep 21, 2026 - 23 Sep,2026</td><td>4 days</td><td class="st">Confirm</td></tr>
+            <tr data-range="03 Sep 26 to 22 Sep 26" data-days="20 days"><td class="n">2</td><td><button class="dots">:::</button></td><td>PGJ/2026/05/-01</td><td>Sep 2, 2026</td><td>Sep 3, 2026 - Sep 22, 2026</td><td>20 days</td><td class="st">Open</td></tr>
+            <tr data-range="23 Sep 26 to 30 Sep 26" data-days="8 days"><td class="n">3</td><td><button class="dots">:::</button></td><td>PGJ/2026/05/-01</td><td>Sep 3, 2026</td><td>Sep 5, 2026 - Sep 30, 2026</td><td>26 days</td><td class="st">Open</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- Detail Action -->
+<div class="pop" id="pop">
+  <h5>Detail Action</h5>
+  <button id="minat">Minat &amp; Confirm</button>
+</div>
+
+<!-- Popup -->
+<div class="overlay" id="ov">
+  <div class="modal">
+    <h2>Mitra Operation &amp; Maintenance( O&amp;M )</h2>
+    <div class="ph">
+      <h3>Proposal Information</h3>
+      <div class="dl">Confirmation Deadline <b>*</b><span class="chip" id="rng">23 Sep 26 to 30 sep 26</span><span id="dys">8 days</span></div>
+    </div>
+    <label>NMitra O&amp;M</label><input type="text" value="Mitra O&M 1" disabled>
+    <label>Nomor Pengajuan</label><input type="text" value="PG-2026/05/01" disabled>
+    <label>Pemilik Lahan</label><input type="text" value="Eko" disabled>
+    <div class="row">
+      <div><label>Luas Lahan</label><input type="text" value="500m2" disabled></div>
+      <div><label>Status Lahan</label><select disabled><option>Milik Sendiri</option></select></div>
+      <div><label>Province</label><select disabled><option>DKI Jakarta</option></select></div>
+      <div><label>City</label><select disabled><option>Jakarta Selatan</option></select></div>
+    </div>
+    <div class="imgs"><div>🖼</div><div>🖼</div><div>🖼</div></div>
+    <label>Action</label>
+    <select style="max-width:220px;background:var(--card)"><option>CONFIRM</option><option>TOLAK</option></select>
+    <label style="margin-top:24px"><b>Upload Document RAB <span style="color:#c00">*</span></b></label>
+    <div class="up">
+      <label class="btn" style="margin:0">Upload<input type="file" id="file" accept=".pdf"></label>
+      <div class="fn" id="fn">RAB EPC.pdf</div>
+    </div>
+    <div class="err" id="err">Dokumen RAB wajib diupload.</div>
+    <div class="acts"><button class="ok" id="ok">confirm</button><button class="cl" id="cl">Close</button></div>
+  </div>
+</div>
+
+<script>
+const pop=document.getElementById('pop'),ov=document.getElementById('ov');
+let cur=null;
+document.querySelectorAll('.dots').forEach(b=>b.addEventListener('click',e=>{
+  e.stopPropagation();
+  cur=b.closest('tr');
+  if(pop.classList.contains('show')&&pop._b===b){pop.classList.remove('show');return}
+  pop._b=b;
+  const r=b.getBoundingClientRect();
+  pop.style.top=(r.bottom+6)+'px';
+  pop.style.left=Math.min(r.left,innerWidth-pop.offsetWidth-10-0)+'px';
+  pop.classList.add('show');
+  pop.style.left=Math.max(8,Math.min(r.left,innerWidth-258))+'px';
+}));
+document.addEventListener('click',e=>{if(!pop.contains(e.target))pop.classList.remove('show')});
+addEventListener('scroll',()=>pop.classList.remove('show'),true);
+document.getElementById('minat').onclick=()=>{
+  pop.classList.remove('show');
+  document.getElementById('rng').textContent=cur.dataset.range;
+  document.getElementById('dys').textContent=cur.dataset.days;
+  document.getElementById('err').style.display='none';
+  ov.classList.add('show');
+};
+const close=()=>ov.classList.remove('show');
+document.getElementById('cl').onclick=close;
+ov.addEventListener('click',e=>{if(e.target===ov)close()});
+document.getElementById('file').onchange=e=>{
+  const f=e.target.files[0]; if(f)document.getElementById('fn').textContent=f.name;
+};
+document.getElementById('ok').onclick=()=>{
+  if(!document.getElementById('fn').textContent.trim()){document.getElementById('err').style.display='block';return}
+  cur.querySelector('.st').textContent='Confirm';
+  close();
+};
+</script>
+</body>
+</html>

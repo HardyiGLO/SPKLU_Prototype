@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daftar Potensi Investasi</title>
+<style>
+:root{--side:#2f5aad;--bg:#ebebeb;--card:#fff;--text:#1a1a1a;--muted:#555;--line:#dcdcdc;--link:#2b4fa8;--purple:#6d3fd6;--blue:#6a9ff0;--field:#f1f1f7;--ro:#e6e6e6;--navy:#2f5aad;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1d20;--card:#26282c;--text:#eee;--muted:#aaa;--line:#3a3d42;--link:#8fb0ff;--field:#33363b;--ro:#3a3d42}}
+:root[data-theme="dark"]{--bg:#1c1d20;--card:#26282c;--text:#eee;--muted:#aaa;--line:#3a3d42;--link:#8fb0ff;--field:#33363b;--ro:#3a3d42}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:"Noto Sans","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+aside{width:208px;flex:none;background:var(--side);color:#fff;padding:14px 0;font-size:12px}
+.logo{display:flex;align-items:center;gap:26px;padding:0 16px 18px}
+.logo b{background:#fff;color:#1c5fa8;padding:4px 10px;font-size:15px;letter-spacing:3px;border-left:8px solid #f5c400}
+.burger{width:32px;height:24px;border-top:4px solid #fff;border-bottom:4px solid #fff;position:relative}
+.burger:after{content:"";position:absolute;left:0;right:0;top:6px;border-top:4px solid #fff}
+aside h4{margin:12px 0 4px 12px;font-size:12px}
+aside a{display:block;padding:4px 12px 4px 31px;color:#fff;text-decoration:none;line-height:1.3}
+aside a:hover{background:rgba(255,255,255,.12)}
+main{flex:1;min-width:0}
+header{background:#fff;color:#111;height:44px;display:flex;justify-content:flex-end;align-items:center;gap:22px;padding:0 16px;border-bottom:1px solid #ccc}
+.btn{background:var(--purple);color:#fff;border:0;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:700}
+h1{margin:0;padding:4px 8px;font-size:20px}
+.panel{background:var(--card);margin:0 12px 0 0;padding:0 14px 40px;min-height:640px}
+.tabs{display:flex;gap:40px;border-bottom:2px solid var(--line);padding:18px 0 8px;margin:0 0 50px;font-size:12px;font-weight:700}
+.tabs a{color:var(--link);text-decoration:underline}
+.box{border:1px solid var(--line);border-radius:10px;padding:0 0 12px;overflow:hidden}
+.tools{display:flex;gap:20px;padding:14px 16px;color:var(--muted)}
+.tools svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:12.5px}
+th{font-weight:500;color:var(--muted);text-align:left;padding:10px 8px;font-size:13px;white-space:nowrap}
+td{padding:8px;border-top:1px solid var(--line);vertical-align:middle;height:54px}
+td.n{color:var(--muted);text-align:center;width:60px}
+.ph{width:70px;height:46px;border-radius:3px;background:linear-gradient(135deg,#5b6b78,#2e3b45 55%,#8a9aa5);position:relative}
+.ph:after{content:"⚡";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:20px}
+.badge{display:inline-block;padding:3px 9px;border-radius:4px;font-size:12px;white-space:nowrap}
+.ok{background:#7be3a1;color:#111}.wait{background:#fbe97a;color:#111}.rej{background:#c00b0b;color:#fff}.cancel{background:#b07d0b;color:#fff}
+.dots{background:none;border:0;font:inherit;letter-spacing:1px;color:var(--muted);cursor:pointer;padding:4px 6px;border-radius:4px}
+.dots:hover,.dots.active{background:rgba(109,63,214,.12);color:var(--purple)}
+.add{padding:14px 16px 0;color:var(--muted);font-size:18px}
+
+/* Popover */
+#pop{position:fixed;z-index:50;width:240px;background:var(--card);color:var(--text);border:2px solid var(--text);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:12px 0 8px}
+#pop[hidden]{display:none}
+#pop:before{content:"";position:absolute;top:-8px;left:var(--arrow,50%);margin-left:-7px;width:12px;height:12px;background:var(--card);border-left:2px solid var(--text);border-top:2px solid var(--text);transform:rotate(45deg)}
+#pop h3{margin:0;padding:0 16px 8px;font-size:16px;font-weight:700;color:var(--blue)}
+#pop hr{border:0;border-top:2px solid var(--line);margin:0 0 6px}
+#pop ul{margin:0;padding:0;list-style:none}
+#pop li button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;text-align:left;font:inherit;font-size:14px;font-weight:700;color:var(--text);padding:8px 16px;cursor:pointer}
+#pop li button:before{content:"•"}
+#pop li button:hover{background:rgba(109,63,214,.1)}
+
+/* Modal */
+.ov{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 12px}
+.ov[hidden]{display:none}
+.dlg{background:var(--card);color:var(--text);width:100%;max-width:980px;border-radius:8px;padding:20px 28px 28px}
+.dlg>h2{margin:0 0 8px;font-size:18px;color:var(--navy);padding-bottom:10px;border-bottom:1px solid #888}
+.dlg h3{margin:14px 0 6px;font-size:18px}
+.dlg h3.b{color:var(--navy)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:14px 36px}
+.g label,.row label{display:block;font-size:14px;margin-bottom:4px}
+.dlg input,.dlg select,.dlg textarea{width:100%;font:inherit;font-size:13px;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:5px;padding:8px 10px}
+.dlg select{border:1.5px solid var(--text);border-radius:8px}
+.dlg textarea{resize:vertical;min-height:110px;border-width:3px}
+.dlg [readonly]{background:var(--ro)}
+.row{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.row .top{display:flex;align-items:center;gap:12px}
+.row .top input{width:150px;text-align:left}
+.hl{border-top:1px solid #888;margin:18px 0 0}
+.rab{display:grid;grid-template-columns:1fr 1fr;gap:20px 36px}
+.rab b{font-size:14px}.rab .v{font-size:38px;font-weight:800;margin-top:10px}
+.rabbox{border:1px solid var(--text);border-radius:6px;background:var(--field);padding:8px 14px 16px;margin-top:14px}
+.rabbox h3{margin:0 0 4px}.rabbox .v{font-size:34px}
+.up{display:flex;gap:6px;align-items:stretch}
+.up .fn{flex:1;max-width:410px;display:flex;align-items:center;padding:0 10px;background:var(--field);border:1px solid var(--line);color:var(--muted);font-size:13px}
+.b1{background:var(--purple);color:#fff;border:0;border-radius:4px;padding:12px 32px;font-size:15px;cursor:pointer}
+.foot{display:flex;justify-content:flex-end;gap:32px;margin-top:26px;align-items:center}
+.foot .l{margin-right:auto}
+.foot button{width:130px;padding:10px 0;border:0;border-radius:3px;color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+.save{background:var(--navy)}.close{background:#c00b0b}
+.foot .batal{background:none;border:2px solid #c00b0b;color:#c00b0b;border-radius:14px;width:130px}
+.yel{display:grid;grid-template-columns:1fr 1fr;gap:20px 36px;margin-top:18px;align-items:start}
+.yel h3{margin:0 0 14px;font-size:17px;font-weight:700}
+.yel .cur{display:inline-block;font-size:22px;padding:2px 14px;border:1px solid var(--line);background:var(--card)}
+.dt{display:flex;align-items:center;gap:14px}
+.dt input{background:var(--card);border-radius:2px;padding:10px 12px;font-size:14px}
+.dt svg{width:28px;height:28px;flex:none;cursor:pointer;stroke:var(--text);fill:none;stroke-width:2}
+.req{color:#c00b0b}
+.err{outline:2px solid #c00b0b}
+@media(max-width:700px){aside{display:none}.tabs{gap:20px}.g,.rab,.yel{grid-template-columns:1fr}.row{flex-direction:column;align-items:flex-start}.dlg{padding:16px}.rab .v{font-size:28px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><b>PLN</b><div class="burger"></div></div>
+  <h4>Dashboard</h4><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+  <h4>Potensi Lahan</h4><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+  <h4>Mitra Overview</h4><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+  <h4>Assigment</h4><a href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+  <h4>Potensi Investasi Investor</h4><a href="#">Publish Potensi Investasi</a><a href="#">Daftar Potensi Investasi &amp; Booking</a>
+  <h4>Penawaran Potensi Investasi</h4><a href="#">Penawaran Investor</a>
+  <h4>Contract Management</h4><a href="#">Contract &amp; Support</a><a href="#">Progross Konstruksi</a>
+  <h4>Workflow</h4><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+  <h4>Configurasi</h4><a href="#" style="padding-left:12px">Master Data</a><a href="#" style="padding-left:12px">Authotization</a><a href="#" style="padding-left:12px">Master User</a><a href="#" style="padding-left:12px">Master Organization</a>
+</aside>
+<main>
+  <header>
+    <span title="Notifikasi">🔔</span><span title="Profil">👤</span>
+    <button class="btn">⎋ Keluar</button>
+  </header>
+  <h1>Daftar Potensi Investasi</h1>
+  <div class="panel">
+    <div class="tabs"><span>Daftar Potensi Investasi</span><a href="#">Daftar Booking Potensi Investasi</a></div>
+    <div class="box">
+      <div class="tools" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0114-5l2 2M20 12a8 8 0 01-14 5l-2-2"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="5"/><rect x="4" y="14" width="16" height="5"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M8 4v16M4 16l4 4 4-4M16 20V4M12 8l4-4 4 4"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 16V8M8 12l4-4 4 4"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>
+      </div>
+      <div class="scroll">
+      <table>
+        <thead><tr><th></th><th>≡ Foto Lahan</th><th>≡ Lokasi Lahan</th><th>▯ Luas Lahan</th><th>≡ Status Lahan</th><th>▦ Survey</th><th>≡ Duedate Confirm</th><th>⌄ Status</th><th>≡ Action</th><th>+</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td><div class="ph"></div></td><td>Jl. Jendral Sudirman,<br>Kav 52, Jakarta Selatan</td><td>650m2</td><td>Hak Milik</td><td>Sep 30, 2026</td><td>30 sep 2026</td><td><span class="badge ok">Approved</span></td><td><button class="dots" aria-haspopup="true" aria-label="Detail Action">⁝⁝⁝</button></td><td></td></tr>
+          <tr><td class="n">2</td><td><div class="ph"></div></td><td>Jl. Jendral Sudirman,<br>Kav 52, Jakarta Selatan</td><td>P200m2</td><td>Hak Guna<br>Babunan</td><td></td><td></td><td><span class="badge wait">Waiting Appro...</span></td><td><button class="dots" aria-haspopup="true" aria-label="Detail Action">⁝⁝⁝</button></td><td></td></tr>
+          <tr><td class="n">3</td><td><div class="ph"></div></td><td>Jl. Jendral Sudirman,<br>Kav 52, Jakarta Selatan</td><td>780m2</td><td>Hak Milik</td><td></td><td></td><td><span class="badge rej">Rejected</span></td><td><button class="dots" aria-haspopup="true" aria-label="Detail Action">⁝⁝⁝</button></td><td></td></tr>
+          <tr><td class="n">4</td><td><div class="ph"></div></td><td>Jl. Jendral Sudirman,<br>Kav 52, Jakarta Selatan</td><td>780m2</td><td>Hak Milik</td><td></td><td></td><td><span class="badge cancel">Batal Minat</span></td><td><button class="dots" aria-haspopup="true" aria-label="Detail Action">⁝⁝⁝</button></td><td></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="add">+</div>
+    </div>
+  </div>
+</main>
+
+<div id="pop" role="dialog" aria-label="Detail Action" hidden>
+  <h3>Detail Action</h3>
+  <hr>
+  <ul>
+    <li><button type="button" data-modal="m1">Submit Penawaran</button></li>
+    <li><button type="button" data-modal="m2">Request Extend Booking</button></li>
+  </ul>
+</div>
+
+<!-- Modal 1 -->
+<div class="ov" id="m1" hidden><div class="dlg" role="dialog" aria-label="Detail Penawaran Investor">
+  <h2>Detail Penawaran Investor</h2>
+  <div class="row"><h3 style="margin:0">Proposal Information</h3><div class="top"><label style="margin:0">Duedate Confirm</label><input readonly data-f="due"></div></div>
+  <div class="row" style="margin-top:12px"><label style="white-space:nowrap;margin:0">Nomor Potensi Lahan</label><input readonly value="PG-2026/05/01" style="font-size:16px"></div>
+  <div class="g" data-fields style="margin-top:14px"></div>
+  <div class="hl"></div>
+  <h3 class="b">Nilai RAB</h3>
+  <div class="rab"><div><b>Total RAB Pengadaan</b><div class="v">Rp. 750.000.000</div></div><div><b>Total RAB Maintenance</b><div class="v">Rp. 50.000.000</div></div></div>
+  <div style="margin-top:22px"><b style="font-size:14px">Upload Document Penawaran<span class="req">*</span></b>
+    <div class="up" style="margin-top:6px"><button type="button" class="b1" id="upBtn">Upload</button><div class="fn" id="fn">RAB EPC.pdf</div><input type="file" id="file" accept=".pdf" hidden></div></div>
+  <div class="foot"><button type="button" class="batal l" data-close>Batal Minat</button><button type="button" class="save" data-save="m1">Save</button><button type="button" class="close" data-close>Close</button></div>
+</div></div>
+
+<!-- Modal 2 -->
+<div class="ov" id="m2" hidden><div class="dlg" role="dialog" aria-label="Detail Request Extend Booking">
+  <h2>Detail Request Extend Booking</h2>
+  <h3 style="margin-top:10px">Proposal Information</h3>
+  <div class="row" style="margin:8px 0 12px"><label style="white-space:nowrap;margin:0">Nomor Potensi Lahan</label><input readonly value="PG-2026/05/01" style="font-size:16px"></div>
+  <div class="g" data-fields></div>
+  <div class="rabbox"><h3 class="b">Nilai RAB</h3><div class="rab"><div><b>Total RAB Pengadaan</b><div class="v">Rp. 750.000.000</div></div><div><b>Total RAB Maintenance</b><div class="v">Rp. 50.000.000</div></div></div></div>
+  <div class="hl"></div>
+  <div class="yel">
+    <div><h3>Duedate Confirm saat ini</h3><div class="cur" data-f="due2">30 Sep 2026</div></div>
+    <div><h3>Duedate Confirm baru</h3><div class="dt"><input type="date" id="newDue" placeholder="dd/mm/yyyy"><svg id="calBtn" viewBox="0 0 24 24" role="button" aria-label="Pilih tanggal"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h2M14 14h2M8 18h2M14 18h2"/></svg></div></div>
+  </div>
+  <div style="margin-top:14px"><label style="font-size:14px">Alasan Perpanjangan Waktu <span class="req">*</span></label><textarea id="reason" style="background:var(--card);min-height:150px"></textarea></div>
+  <div class="foot"><button type="button" class="save" data-save="m2">Save</button><button type="button" class="close" data-close>Close</button></div>
+</div></div>
+
+<script>
+(function(){
+  var pop=document.getElementById('pop'),cur=null,row=null;
+  var F='<div style="grid-column:1/-1;display:none"></div>'
+   +'<div><label>Alamat Lengkap Lahan</label><textarea readonly data-f="addr"></textarea></div>'
+   +'<div><label>Deskripsi Lahan</label><textarea readonly data-f="desc"></textarea></div>'
+   +'<div><label>Luas Lahan</label><input readonly data-f="luas"></div>'
+   +'<div><label>Status Lahan</label><select data-f="status"><option>Milik Sendiri</option><option>Hak Milik</option><option>Hak Guna Bangunan</option></select></div>'
+   +'<div><label>Province</label><select data-f="prov"><option>DKI Jakarta</option></select></div>'
+   +'<div><label>City</label><select data-f="city"><option>Jakarta Selatan</option></select></div>'
+   +'<div><label>Postal Code</label><input readonly data-f="pos"></div>';
+  document.querySelectorAll('[data-fields]').forEach(function(e){e.innerHTML=F});
+
+  function closePop(){pop.hidden=true;if(cur)cur.classList.remove('active');cur=null}
+  function openPop(btn){
+    if(cur)cur.classList.remove('active');
+    cur=btn;btn.classList.add('active');pop.hidden=false;row=btn.closest('tr');
+    var r=btn.getBoundingClientRect(),w=pop.offsetWidth,cx=r.left+r.width/2;
+    var left=Math.min(Math.max(8,cx-w/2),window.innerWidth-w-8);
+    pop.style.left=left+'px';pop.style.top=(r.bottom+10)+'px';
+    pop.style.setProperty('--arrow',(cx-left)+'px');
+  }
+  function fill(m){
+    var c=row?row.cells:[],t=function(i){return c[i]?c[i].innerText.replace(/\s+/g,' ').trim():''};
+    var st=t(4).replace('Babunan','Bangunan');
+    var set=function(k,v){m.querySelectorAll('[data-f="'+k+'"]').forEach(function(e){if(e.tagName==='DIV')e.textContent=v;else e.value=v})};
+    set('addr',t(2));set('luas',t(3));set('due',t(6)||'30 Sep 2026');set('due2',t(6)||'30 Sep 2026');
+    var s=m.querySelector('[data-f="status"]');if(s){for(var i=0;i<s.options.length;i++)if(s.options[i].text===st)s.selectedIndex=i}
+  }
+  function openModal(id){
+    closePop();var m=document.getElementById(id);fill(m);m.hidden=false;document.body.style.overflow='hidden';
+  }
+  function closeModals(){document.querySelectorAll('.ov').forEach(function(m){m.hidden=true});document.body.style.overflow=''}
+
+  document.addEventListener('click',function(e){
+    var d=e.target.closest('.dots');
+    if(d){cur===d?closePop():openPop(d);return}
+    var mb=e.target.closest('[data-modal]');
+    if(mb){openModal(mb.dataset.modal);return}
+    if(e.target.closest('[data-close]')||e.target.classList.contains('ov')){closeModals();return}
+    var sv=e.target.closest('[data-save]');
+    if(sv){
+      var ok=true;
+      if(sv.dataset.save==='m2'){
+        ['newDue','reason'].forEach(function(id){var el=document.getElementById(id);var bad=!el.value.trim();el.classList.toggle('err',bad);if(bad)ok=false});
+      }
+      if(ok){closeModals();alert('Data berhasil disimpan.')}
+      return;
+    }
+    var cb=e.target.closest('#calBtn');if(cb){var n=document.getElementById('newDue');try{n.showPicker()}catch(x){n.focus()}return}
+    if(e.target.id==='upBtn'){document.getElementById('file').click();return}
+    if(!e.target.closest('#pop'))closePop();
+  });
+  document.getElementById('file').addEventListener('change',function(){if(this.files[0])document.getElementById('fn').textContent=this.files[0].name});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePop();closeModals()}});
+  window.addEventListener('scroll',function(e){if(!e.target.closest||!e.target.closest('.ov'))closePop()},true);
+  window.addEventListener('resize',closePop);
+})();
+</script>
+</body>
+</html>

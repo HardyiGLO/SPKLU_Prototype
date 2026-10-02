@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Progress Konstruksi - PLN</title>
+<style>
+:root{--side:#2f55a8;--bg:#e6e6e6;--card:#fff;--text:#1c1c1c;--muted:#6b7280;--line:#e5e7eb;--primary:#6d28d9;--blue:#2f55a8;--ok:#86efac;--draft:#fef08a;--hd:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111318;--card:#1b1e26;--text:#eceef3;--muted:#9aa3b2;--line:#2c313c;--hd:#1b1e26;--side:#23407f;--ok:#2f7a4c;--draft:#7a6a1c}}
+:root[data-theme="dark"]{--bg:#111318;--card:#1b1e26;--text:#eceef3;--muted:#9aa3b2;--line:#2c313c;--hd:#1b1e26;--side:#23407f;--ok:#2f7a4c;--draft:#7a6a1c}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans","Segoe UI",Arial,sans-serif;font-size:14px;display:flex;min-height:100vh}
+aside{width:200px;flex-shrink:0;background:var(--side);color:#fff;padding:12px 0 24px;font-size:12.5px}
+.logo{margin:0 0 14px 17px;background:#fff;color:#1a6fb5;font-weight:800;font-size:18px;width:82px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:2px}
+.logo b{color:#f5b400;margin-right:4px}
+.menu-t{font-weight:700;margin:10px 0 2px 12px}
+aside a{display:block;color:#fff;text-decoration:none;padding:4px 12px 4px 32px;line-height:1.25}
+aside a:hover,aside a.on{background:rgba(255,255,255,.18)}
+main{flex:1;min-width:0}
+header{height:46px;background:var(--hd);display:flex;align-items:center;justify-content:flex-end;gap:22px;padding:0 18px;border-bottom:1px solid var(--line)}
+header svg{width:20px;height:20px;fill:var(--text)}
+.btn-out{background:var(--primary);color:#fff;border:0;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;display:flex;gap:6px;align-items:center;cursor:pointer}
+.title{display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:20px;font-weight:700}
+.panel{background:var(--card);margin:0 10px;padding-bottom:40px;min-height:436px}
+.panel h2{font-size:12.5px;margin:0;padding:15px 10px 10px;border-bottom:1px solid var(--muted)}
+.bar{display:flex;align-items:center;gap:8px;padding:24px 14px 8px;flex-wrap:wrap}
+.date{display:flex;align-items:center;justify-content:space-between;width:234px;height:26px;border:1px solid var(--line);padding:0 8px;background:var(--card);color:var(--muted)}
+input[type=date]{border:0;background:transparent;color:inherit;font:inherit;width:100%;outline:0}
+.btn{border:0;color:#fff;font-weight:700;font-size:10px;padding:5px 25px;cursor:pointer;border-radius:2px}
+.filter{background:var(--blue)}.submit{background:var(--primary);margin-left:auto;margin-right:30px;align-self:flex-start;margin-top:-8px}
+.grid{margin:4px 12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tools{display:flex;gap:22px;padding:14px 16px;color:var(--text)}
+.tools svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:820px;font-size:13px}
+th{font-weight:400;color:var(--muted);text-align:left;padding:10px 12px;white-space:nowrap}
+td{padding:12px;border-top:1px solid var(--line);vertical-align:top;white-space:nowrap}
+td.n,th.n{color:var(--muted);width:44px;text-align:center}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:13px}
+.s-sub{border:1px solid var(--text)}.s-ok{background:var(--ok);color:#111;padding:2px 8px}.s-dr{background:var(--draft);color:#111}
+.pill{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12px;display:inline-block}
+.add{padding:10px 16px;border-top:1px solid var(--line);color:var(--text);font-size:18px;cursor:pointer}
+@media (max-width:760px){aside{display:none}.submit{margin-right:0}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><b>⚡</b>PLN</div>
+  <div class="menu-t">Dashboard</div><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+  <div class="menu-t">Potensi Lahan</div><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+  <div class="menu-t">Mitra Overview</div><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+  <div class="menu-t">Assigment</div><a href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+  <div class="menu-t">Potensi Investasi</div><a href="#">Publish Potensi Investasi</a>
+  <div class="menu-t">Investor</div><a href="#">Daftar Potensi Investasi &amp; Booking</a>
+  <div class="menu-t">Penawaran Potensi Investasi</div><a href="#">Penawaran Investor</a>
+  <div class="menu-t">Contract Management</div><a href="#">Contract &amp; Support</a><a href="#" class="on">Progress Konstruksi</a>
+  <div class="menu-t">Workflow</div><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+  <div class="menu-t">Configurasi</div><a href="#">Master Data</a><a href="#">Authotization</a><a href="#">Master User</a><a href="#">Master Organization</a>
+</aside>
+<main>
+  <header>
+    <svg viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3-1.6-5.5-4.5-6.2V4a1.5 1.5 0 0 0-3 0v.8C7.6 5.5 6 8 6 11v5l-2 2v1h16v-1z"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 9v-2c0-2.5 4-4 8-4s8 1.5 8 4v2z"/></svg>
+    <button class="btn-out">⎆ Keluar</button>
+  </header>
+  <div class="title"><span>←</span>Progress</div>
+  <section class="panel">
+    <h2>Progress konstruksi</h2>
+    <div class="bar">
+      <label for="per">Periode</label>
+      <div class="date"><input id="per" type="date" value="2026-12-31"></div>
+      <button class="btn filter">Filter</button>
+      <button class="btn submit">Submit</button>
+    </div>
+    <div class="grid">
+      <div class="tools">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6l3 3M21 4v5h-5M21 12a9 9 0 0 1-15 6l-3-3M3 20v-5h5"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h8"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 16V8m-3 3 3-3 3 3"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg>
+      </div>
+      <div class="scroll">
+      <table>
+        <thead><tr><th class="n"></th><th>≡ Contract No</th><th>≡ Contract Name</th><th>▯ Prog Plan</th><th>≡ Month</th><th>≡ Notes</th><th>▤ Last Update</th><th>≡ Update By</th><th>◌ Status</th><th style="text-align:center;color:var(--text);font-size:18px">+</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>CONT-001</td><td>CONT-001-Name1</td><td><span class="pill">20%</span></td><td>1</td><td></td><td>Mar 1, 2026</td><td></td><td><span class="tag s-sub">Submited</span></td><td></td></tr>
+          <tr><td class="n">2</td><td>CONT-002</td><td>CONT-002 Name 2</td><td>10%</td><td>2</td><td></td><td>May 8, 2026</td><td></td><td><span class="tag s-ok">Approved</span></td><td></td></tr>
+          <tr><td class="n">3</td><td>CONT-003</td><td>CONT-003 name 3</td><td>50%</td><td>3</td><td></td><td>May 10, 2026</td><td></td><td><span class="tag s-dr">Draft</span></td><td></td></tr>
+          <tr><td class="n">4</td><td>CONT-004</td><td>CONT-001 name 4</td><td>70%</td><td>4</td><td></td><td>Jul 19, 2026</td><td></td><td><span class="tag s-dr">Draft</span></td><td></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="add">+</div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

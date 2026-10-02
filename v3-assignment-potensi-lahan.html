@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Assignment Potensi Lahan</title>
+<style>
+:root{--bg:#e6e6e6;--card:#fff;--txt:#1c1c1c;--mut:#666;--pri:#2f5aa8;--side:#2f5aa8;--bar:#c9dcfb;--line:#e3e3e3;--field:#e6e6e6;--red:#c00d0d;--shadow:rgba(0,0,0,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--card:#1f242b;--txt:#eceff3;--mut:#9aa3ad;--pri:#7ea6ec;--bar:#26374f;--line:#333a44;--field:#2c323b}}
+:root[data-theme="dark"]{--bg:#15181d;--card:#1f242b;--txt:#eceff3;--mut:#9aa3ad;--pri:#7ea6ec;--bar:#26374f;--line:#333a44;--field:#2c323b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.4 "Noto Sans","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh}
+aside{width:209px;background:var(--side);color:#fff;padding:12px 0;flex-shrink:0}
+aside .logo{background:#fff;color:#0a66b3;font-weight:700;letter-spacing:3px;margin:0 12px 14px;padding:8px 12px;width:80px}
+aside b{display:block;padding:8px 12px 2px;font-size:12px}
+aside a{display:block;padding:3px 12px 3px 32px;font-size:12px;color:#fff;text-decoration:none;opacity:.92}
+aside a.on{background:rgba(255,255,255,.18);font-weight:600}
+main{flex:1;min-width:0}
+header{background:var(--card);height:44px;display:flex;justify-content:flex-end;align-items:center;padding:0 16px;border-bottom:1px solid var(--line)}
+header span{background:#7a3ff0;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px}
+h1{margin:6px 4px;font-size:20px}
+.panel{background:var(--card);margin:0;padding:20px 14px;min-height:560px}
+.panel h2{color:var(--pri);font-size:16px;margin:0 0 18px 10px}
+.bar{background:var(--bar);color:var(--pri);font-weight:600;padding:9px 18px;display:flex;justify-content:space-between;font-size:12px}
+.bar button{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:2px 4px;border-radius:4px}
+.bar button:hover{text-decoration:underline}
+.wrap{overflow-x:auto;margin:30px 0 0 0;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:900px}
+th{font-weight:400;color:var(--mut);text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);font-size:12px}
+td.n{color:var(--mut);width:36px}
+.dots{border:0;background:none;color:var(--txt);font-weight:700;cursor:pointer;letter-spacing:1px;padding:4px 8px;border-radius:4px}
+.dots:hover,.dots:focus-visible{background:var(--bar)}
+.tag{padding:3px 8px;border-radius:4px;font-size:11px;white-space:nowrap;color:#1c1c1c}
+.t-Verifikasi{background:#6a2fd6;color:#fff}.t-Survey{background:#fbe97a}.t-Expired{background:#bd0b0b;color:#fff}.t-Confirm{background:#c9dcfb}.t-Open{background:#7fe08f}
+#menu{position:absolute;display:none;background:var(--card);border:1px solid var(--txt);border-radius:12px;padding:10px 14px;min-width:170px;box-shadow:0 6px 18px var(--shadow);z-index:20}
+#menu h4{margin:0 0 6px;color:#5b96f0;font-size:15px}
+#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--txt);font:600 13px inherit;font-family:inherit;padding:7px 4px;cursor:pointer;border-radius:4px}
+#menu button:hover,#menu button:focus-visible{background:var(--bar)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px;z-index:30}
+.ov.show{display:flex}
+.modal{background:var(--card);width:100%;max-width:640px;border-radius:8px;padding:20px 26px 24px}
+.modal h3{color:var(--pri);margin:0 0 6px;font-size:16px;padding-bottom:10px;border-bottom:1px solid var(--mut)}
+.modal h5{font-size:15px;margin:14px 0 8px}
+.row{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;align-items:center;margin:8px 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+label{font-size:12px}
+.req{color:var(--red)}
+.f{background:var(--field);color:var(--txt);border:1px solid transparent;border-radius:4px;padding:8px 10px;width:100%;font:inherit;min-height:34px}
+input.f:not([readonly]),textarea.f,select.f:not(:disabled){background:var(--card);border-color:var(--line)}
+.f:focus-visible,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
+.days{margin-left:8px;white-space:nowrap}
+.dl{display:flex;align-items:center;gap:8px;margin:6px 0}
+.dl .f{max-width:230px}
+.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.docs div{background:#f1ede6;aspect-ratio:4/3;display:grid;place-items:center;color:#5c4d3f;font-size:28px;border-radius:2px}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.btn{border:0;color:#fff;font:600 12px inherit;font-family:inherit;padding:9px 34px;border-radius:3px;cursor:pointer}
+.save{background:var(--pri);color:#fff}.close{background:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:4px;padding:8px}
+.chips span{border:1px solid var(--line);border-radius:3px;padding:2px 8px;font-size:11px}
+.find{display:flex;gap:12px}.find input{width:140px}
+a.pdf{color:#3b82f6}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c1c1c;color:#fff;padding:10px 18px;border-radius:6px;display:none;z-index:50}
+
+/* ===== Add New Assigment ===== */
+.chip-box{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:4px;padding:8px;min-height:54px;background:var(--card);margin-top:4px}
+.chip{border:1px solid var(--line);border-radius:3px;padding:2px 6px 2px 8px;font-size:11px;display:inline-flex;gap:6px;align-items:center}
+.chip button{border:0;background:none;color:var(--mut);cursor:pointer;padding:0;font-size:13px;line-height:1}
+.chip button:hover{color:var(--red)}
+.chip-add{margin-top:6px;max-width:260px;font-size:12px}
+.err{color:var(--red);font-size:11px;margin-top:8px;display:none}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin:8px 0}
+
+/* ===== Verifikasi Penawaran Mitra ===== */
+.rab{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin:10px 0}
+.rab-file{display:flex;gap:12px;align-items:center}
+.rab-file .ico{background:#c0392b;color:#fff;font-weight:700;font-size:11px;padding:14px 8px;border-radius:4px}
+.rab-file b{display:block;font-size:14px}
+.dl-btn{display:block;width:100%;margin-top:10px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:6px;color:var(--txt);text-decoration:none;font-size:12px;background:var(--card)}
+.rab-total b{display:block;font-size:15px}
+.rab-total .amt{font-size:20px;font-weight:700;margin-top:24px;display:block}
+.vr{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:8px}
+.vr .q{color:var(--pri);font-weight:600;font-size:12px}
+.vr label{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-weight:600}
+.vr .warn{color:#f5a04a}.vr .rej{color:var(--red)}
+
+@media (max-width:760px){aside{display:none}.row,.pair{grid-template-columns:1fr}.g2{grid-template-columns:1fr}.rab{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo">PLN</div>
+  <b>Dashboard</b><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+  <b>Potensi Lahan</b><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+  <b>Mitra Overview</b><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+  <b>Assigment</b><a class="on" href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+  <b>Potensi Investasi</b><a href="#">Publish Potensi Investasi</a>
+  <b>Investor</b><a href="#">Daftar Potensi Investasi &amp; Booking</a>
+  <b>Penawaran Potensi Investasi</b><a href="#">Penawaran Investor</a>
+  <b>Contract Management</b><a href="#">Contract &amp; Support</a><a href="#">Progress Konstruksi</a>
+  <b>Workflow</b><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+  <b>Configurasi</b><a href="#">Master Data</a><a href="#">Authotization</a><a href="#">Master User</a><a href="#">Master Organization</a>
+</aside>
+<main>
+  <header><span>Keluar</span></header>
+  <h1>Assigment Potensi Lahan</h1>
+  <div class="panel">
+    <h2>Assigment Potensi Lahan</h2>
+    <div class="bar"><button type="button" id="btn-add">+ Add new record</button><span>⟳ Refresh</span></div>
+    <div class="wrap">
+      <table>
+        <thead><tr><th></th><th>Action</th><th>No Assigment</th><th>Assig Date</th><th>Start &amp; End Confirm</th><th>Days</th><th>Nama Mitra</th><th>Mitra</th><th>Status</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="menu" role="menu">
+  <h4>Detail Action</h4>
+  <button role="menuitem" data-a="update">• Update Duedate</button>
+  <button role="menuitem" data-a="view">• View</button>
+  <button role="menuitem" data-a="reassign">• Re-Assign</button>
+  <button role="menuitem" data-a="verif">• Verifikasi RAB</button>
+</div>
+
+<!-- Update Duedate -->
+<div class="ov" id="m-update"><div class="modal" role="dialog" aria-modal="true">
+  <h3>Update Duedate</h3>
+  <h5>Lahan Information</h5>
+  <div class="row"><label>No Assigment</label><input class="f" readonly data-f="no"></div>
+  <div class="row"><label>Nama Mitra</label><input class="f" readonly data-f="mitra"></div>
+  <div class="row"><label>Nomor Potensi Lahan</label><input class="f" readonly value="PG-2026/05/01"></div>
+  <div class="row"><label>Pemilik Lahan</label><input class="f" readonly value="Eko"></div>
+  <div class="g2">
+    <div><label>Luas Lahan</label><input class="f" readonly value="500m2"></div>
+    <div><label>Status Lahan</label><select class="f" disabled><option>Milik Sendiri</option></select></div>
+    <div><label>Province</label><select class="f" disabled><option>DKI Jakarta</option></select></div>
+    <div><label>City</label><select class="f" disabled><option>Jakarta Selatan</option></select></div>
+  </div>
+  <div style="margin-top:16px"><label>Confirmation Deadline <span class="req">*</span></label>
+    <div class="dl"><input class="f" type="date" id="u-s" value="2026-09-23"> <span>–</span> <input class="f" type="date" id="u-e" value="2026-09-30"><span class="days" id="u-d">8 days</span></div></div>
+  <h5>Dokumentasi</h5>
+  <div class="docs"><div>🖼</div><div>🖼</div><div>🖼</div></div>
+  <div class="actions"><button class="btn save" data-save="Duedate berhasil diperbarui">Save</button><button class="btn close" data-close>Close</button></div>
+</div></div>
+
+<!-- View -->
+<div class="ov" id="m-view"><div class="modal" role="dialog" aria-modal="true">
+  <h3>View Assigment Potensi Lahan</h3>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><h5 style="margin:6px 0">Lahan Information</h5>
+    <span><label>Confirmation Deadline <span class="req">*</span></label> <span class="f" style="display:inline;padding:4px 10px">23 Sep 26 to 30 Sep 26</span> <span class="days">8 days</span></span></div>
+  <div class="row"><label>No Assigment</label><input class="f" readonly data-f="no"></div>
+  <div class="row"><label>Nama Mitra</label><input class="f" readonly data-f="mitra"></div>
+  <div class="row"><label>Nomor Potensi Lahan</label><input class="f" readonly value="PG-2026/05/01"></div>
+  <div class="row"><label>Pemilik Lahan</label><input class="f" readonly value="Eko"></div>
+  <div class="g2">
+    <div><label>Luas Lahan</label><input class="f" readonly value="500m2"></div>
+    <div><label>Status Lahan</label><select class="f" disabled><option>Milik Sendiri</option></select></div>
+    <div><label>Province</label><select class="f" disabled><option>DKI Jakarta</option></select></div>
+    <div><label>City</label><select class="f" disabled><option>Jakarta Selatan</option></select></div>
+  </div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+  <h5>Appointment survey</h5>
+  <div class="g2">
+    <div><label>Tanggal Survey <span class="req">*</span></label><input class="f" readonly value="01 / 10 / 2026"></div>
+    <div><label>Tanggal Actual Survey <span class="req">*</span></label><input class="f" readonly value="05 / 10 / 2026"></div>
+  </div>
+  <div class="docs"><div>🖼</div><div>🖼</div><div>🖼</div></div>
+  <h5 style="margin-top:18px">Keterangan Hasil Survey <span class="req">*</span></h5>
+  <textarea class="f" rows="5" readonly></textarea>
+  <h5>Action</h5>
+  <select class="f" style="max-width:200px" disabled><option>Approve</option></select>
+  <div style="margin-top:14px"><b style="font-size:11px">Upload Document RAB</b><br><a class="pdf" href="#" onclick="return false">RAB EPC.pdf</a></div>
+  <div class="actions"><button class="btn close" data-close>Close</button></div>
+</div></div>
+
+<!-- Re-Assign -->
+<div class="ov" id="m-reassign"><div class="modal" role="dialog" aria-modal="true">
+  <h3>Re-Assigment Potensi Lahan</h3>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><h5 style="margin:6px 0">Lahan Information</h5>
+    <span><label>Confirmation Deadline <span class="req">*</span></label> <span class="f" style="display:inline;padding:4px 10px">23 Sep 26 to 30 Sep 26</span> <span class="days">8 days</span></span></div>
+  <div class="row"><label>No Assigment</label><input class="f" readonly data-f="no"></div>
+  <div class="row"><label>Nomor Potensi Lahan</label><input class="f" readonly value="PG-2026/05/01"></div>
+  <div class="row"><label>Pemilik Lahan</label><input class="f" readonly value="Eko"></div>
+  <div class="g2">
+    <div><label>Luas Lahan</label><input class="f" readonly value="500m2"></div>
+    <div><label>Status Lahan</label><select class="f" disabled><option>Milik Sendiri</option></select></div>
+    <div><label>Province</label><select class="f" disabled><option>DKI Jakarta</option></select></div>
+    <div><label>City</label><select class="f" disabled><option>Jakarta Selatan</option></select></div>
+  </div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+  <h5>Mitra Information</h5>
+  <div class="row">
+      <label>Nama Mitra</label>
+    <input class="f" readonly data-f="mitra">
+</div>
+  <div class="row">
+      <label>Re-Assign</label>
+      <div class="find"><input class="f" list="mitras" id="r-mitra" placeholder="🔍 Search"><datalist id="mitras"><option value="Mitra EPC 2"><option value="Mitra EPC 3"><option value="Mitra EPC 4"><option value="Mitra O&M 3"></datalist><input class="f" readonly data-f="" value="Mitra EPC 2"></div>
+</div>
+  <div style="margin-top:14px"><label>Confirmation Deadline <span class="req">*</span></label>
+    <div class="dl"><input class="f" type="date" id="r-s" value="2026-09-01"> <span>–</span> <input class="f" type="date" id="r-e" value="2026-09-15"><span class="days" id="r-d">15 Days</span></div></div>
+  <div class="actions"><button class="btn save" data-save="Re-assign berhasil disimpan">Save</button><button class="btn close" data-close>Close</button></div>
+</div></div>
+
+<!-- Verifikasi RAB -->
+<div class="ov" id="m-verif"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="v-title">
+  <h3 id="v-title">Verifikasi Penawaran Mitra</h3>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><h5 style="margin:6px 0">Lahan Information</h5>
+    <span><label>Confirmation Deadline <span class="req">*</span></label> <span class="f" style="display:inline;padding:4px 10px">23 Sep 26 to 30 Sep 26</span> <span class="days">8 days</span></span></div>
+  <div class="row"><label>No Assigment</label><input class="f" readonly data-f="no"></div>
+  <div class="row"><label>Nama Mitra</label><input class="f" readonly data-f="mitra"></div>
+  <div class="row"><label>Nomor Potensi Lahan</label><input class="f" readonly value="PG-2026/05/01"></div>
+  <div class="g2">
+    <div><label>Luas Lahan</label><input class="f" readonly value="500m2"></div>
+    <div><label>Status Lahan</label><select class="f" disabled><option>Milik Sendiri</option></select></div>
+  </div>
+
+  <h5 style="margin-top:22px">DATA RAB</h5>
+  <div class="rab">
+    <div>
+      <div class="rab-file"><span class="ico">PDF</span>
+        <div><b>RAB Mitra EPC (Engineering, Procurement, Construction)</b><small>Estimasi Biaya Pembangunan SPKLU</small></div></div>
+      <a class="dl-btn" href="#" onclick="return false">⭳ Unduh Dokumen</a>
+    </div>
+    <div class="rab-total"><b>Total RAB Pengadaan</b><span class="amt">Rp. 750.000.000</span></div>
+  </div>
+
+  <h5 style="margin-top:22px">Hasil Verifikasi</h5>
+  <div class="vr" role="radiogroup" aria-label="Hasil Verifikasi">
+    <span class="q">SETUJU Data RAB untuk Proposal di atas ?</span>
+    <label><input type="radio" name="vr" value="ya" checked> YA</label>
+    <label class="warn"><input type="radio" name="vr" value="perbaikan"> TIDAK, Butuh Perbaikan</label>
+    <label class="rej"><input type="radio" name="vr" value="tolak"> Tolak</label>
+  </div>
+  <div class="actions"><button class="btn save" data-save="Verifikasi RAB berhasil disimpan">Confirm</button><button class="btn close" data-close>Close</button></div>
+</div></div>
+
+<!-- Add New -->
+<div class="ov" id="m-add"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-title">
+  <h3 id="add-title">Add New Assigment Potensi Lahan</h3>
+  <h5>Lahan Information</h5>
+  <div class="row"><label>No Assigment</label><input class="f" readonly value="ASSG-01/05/PG-2026/05/01/01"></div>
+
+  <label for="a-lahan">Nomor Potensi Lahan</label>
+  <div class="pair">
+    <div><input class="f" list="lahan" id="a-lahan" placeholder="🔍 Search" autocomplete="off">
+      <datalist id="lahan"><option value="PG-2026/05/01"></datalist></div>
+    <input class="f" readonly id="a-nomor" aria-label="Nomor Potensi Lahan terpilih">
+  </div>
+
+  <div class="row"><label>Pemilik Lahan</label><input class="f" readonly id="a-pemilik"></div>
+  <div class="g2">
+    <div><label>Luas Lahan</label><input class="f" readonly id="a-luas"></div>
+    <div><label>Status Lahan</label><select class="f" disabled><option id="a-status"></option></select></div>
+    <div><label>Province</label><select class="f" disabled><option id="a-prov"></option></select></div>
+    <div><label>City</label><select class="f" disabled><option id="a-city"></option></select></div>
+  </div>
+
+  <h5>Assigment Mitra</h5>
+  <div class="g2" style="align-items:start">
+    <div><label>Mitra EPC <span class="req">*</span></label>
+      <div class="chip-box" id="c-epc"></div>
+      <select class="f chip-add" id="s-epc" aria-label="Tambah Mitra EPC"></select></div>
+    <div><label>Mitra O&amp;M <span class="req">*</span></label>
+      <div class="chip-box" id="c-om"></div>
+      <select class="f chip-add" id="s-om" aria-label="Tambah Mitra O&amp;M"></select></div>
+  </div>
+
+  <div style="margin-top:16px"><label>Confirmation Deadline <span class="req">*</span></label>
+    <div class="dl"><input class="f" type="date" id="a-s" value="2026-09-23"> <span>–</span> <input class="f" type="date" id="a-e" value="2026-09-30"><span class="days" id="a-d">7 days</span></div></div>
+  <div class="err" id="a-err" role="alert">Pilih Nomor Potensi Lahan, minimal 1 Mitra EPC dan 1 Mitra O&amp;M, lalu isi tanggal deadline dengan benar.</div>
+
+  <h5>Dokumentasi</h5>
+  <div class="docs"><div>🖼</div><div>🖼</div><div>🖼</div></div>
+  <div class="actions"><button class="btn save" id="a-save">Save</button><button class="btn close" data-close>Close</button></div>
+</div></div>
+
+<div id="toast" role="status"></div>
+
+<script>
+const data=[
+ ["Sep 1, 2026","Sep 21, 2026 - 23 Sep,2026","4 days","Mitra EPC 1","EPC","Verifikasi RAB","Verifikasi"],
+ ["Sep 1, 2026","Sep 21, 2026 - 23 Sep,2026","4 days","Mitra EPC 1","EPC","Survey","Survey"],
+ ["Sep 2, 2026","Sep 3, 2026 - Sep 22, 2026","20 days","Mitra O&M 1","O&M","Expired","Expired"],
+ ["Sep 2, 2026","Sep 3, 2026 - Sep 22, 2026","20 days","Mitra O&M 2","O&M","Confirm","Confirm"],
+ ["Sep 3, 2026","Sep 5, 2026 - Sep 30, 2026","26 days","Mitra EPC 2","EPC","Open","Open"],
+ ["Sep 3, 2026","Sep 5, 2026 - Sep 30, 2026","26 days","Mitra EPC 2","EPC","Open","Open"]];
+const NO="ASSG-01/05/PG-2026/05/01/01";
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+
+function render(){
+  $("#rows").innerHTML=data.map((r,i)=>`<tr><td class="n">${i+1}</td><td><button class="dots" data-i="${i}" aria-haspopup="menu" aria-label="Action baris ${i+1}">:::</button></td><td>${NO}</td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${esc(r[3])}</td><td>${r[4]}</td><td><span class="tag t-${r[6]}">${r[5]}</span></td></tr>`).join("");
+}
+render();
+
+let cur=0;const menu=$("#menu");
+document.addEventListener("click",e=>{
+  const d=e.target.closest(".dots");
+  if(d){cur=+d.dataset.i;const b=d.getBoundingClientRect();menu.style.display="block";
+    menu.style.top=(b.bottom+scrollY+4)+"px";menu.style.left=Math.min(b.left+scrollX,innerWidth-menu.offsetWidth-8)+"px";menu.querySelector("button").focus();return}
+  const a=e.target.closest("#menu button");
+  if(a){menu.style.display="none";open("m-"+a.dataset.a);return}
+  if(!e.target.closest("#menu"))menu.style.display="none";
+  if(e.target.closest("[data-close]")||e.target.classList.contains("ov"))closeAll();
+  const s=e.target.closest("[data-save]");if(s){closeAll();toast(s.dataset.save)}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeAll();menu.style.display="none"}});
+function open(id){
+  $$("[data-f=no]").forEach(x=>x.value=NO);
+  $$("[data-f=mitra]").forEach(x=>x.value=data[cur][3]);
+  $("#r-mitra").value="";calc();
+  document.getElementById(id).classList.add("show");
+}
+function closeAll(){$$(".ov").forEach(o=>o.classList.remove("show"))}
+function toast(t){const x=$("#toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",2200)}
+function diff(a,b){return Math.max(0,Math.round((new Date(b)-new Date(a))/864e5))}
+function calc(){$("#u-d").textContent=diff($("#u-s").value,$("#u-e").value)+" days";$("#r-d").textContent=diff($("#r-s").value,$("#r-e").value)+" Days"}
+["#u-s","#u-e","#r-s","#r-e"].forEach(s=>$(s).addEventListener("input",calc));
+
+/* ===== Add New Assigment ===== */
+/* Data contoh: ganti dengan data dari backend */
+const LAHAN={"PG-2026/05/01":{pemilik:"Eko",luas:"500m2",status:"Milik Sendiri",prov:"DKI Jakarta",city:"Jakarta Selatan"}};
+const ALL={
+  epc:["PT. Mitra 1","PT Mitra 2","PT. Mitra 3","PT. Mitra 4","PT. Mitra 5"],
+  om:["PT Haleyora Power","PT Siemens Energy Indonesia","PT Schneider Electric Indonesia","PT ABB Power Grids","PT Mitra O&M 5"]
+};
+const LABEL={epc:"Mitra EPC",om:"Mitra O&M"};
+let sel={epc:[],om:[]};
+
+function drawChips(k){
+  $("#c-"+k).innerHTML=sel[k].map(m=>`<span class="chip">${esc(m)}<button type="button" data-rm="${k}" data-v="${esc(m)}" aria-label="Hapus ${esc(m)}">✕</button></span>`).join("");
+  const rest=ALL[k].filter(m=>!sel[k].includes(m));
+  $("#s-"+k).innerHTML=`<option value="">+ Tambah ${esc(LABEL[k])}</option>`+rest.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join("");
+}
+function fillLahan(){
+  const key=$("#a-lahan").value, d=LAHAN[key]||{};
+  $("#a-nomor").value=d.pemilik?key:"";
+  $("#a-pemilik").value=d.pemilik||"";
+  $("#a-luas").value=d.luas||"";
+  $("#a-status").textContent=d.status||"";
+  $("#a-prov").textContent=d.prov||"";
+  $("#a-city").textContent=d.city||"";
+}
+function calcAdd(){$("#a-d").textContent=diff($("#a-s").value,$("#a-e").value)+" days"}
+function openAdd(){
+  sel={epc:ALL.epc.slice(0,4),om:ALL.om.slice(0,4)};
+  drawChips("epc");drawChips("om");
+  $("#a-lahan").value="PG-2026/05/01";fillLahan();
+  $("#a-err").style.display="none";calcAdd();
+  $("#m-add").classList.add("show");
+  $("#a-lahan").focus();
+}
+
+$("#btn-add").addEventListener("click",openAdd);
+$("#a-lahan").addEventListener("input",fillLahan);
+["#a-s","#a-e"].forEach(s=>$(s).addEventListener("input",calcAdd));
+document.addEventListener("click",e=>{
+  const r=e.target.closest("[data-rm]");
+  if(r){sel[r.dataset.rm]=sel[r.dataset.rm].filter(m=>m!==r.dataset.v);drawChips(r.dataset.rm)}
+});
+["epc","om"].forEach(k=>$("#s-"+k).addEventListener("change",e=>{
+  if(e.target.value){sel[k].push(e.target.value);drawChips(k)}
+}));
+$("#a-save").addEventListener("click",()=>{
+  const s=$("#a-s").value,e=$("#a-e").value;
+  if(!sel.epc.length||!sel.om.length||!s||!e||new Date(e)<new Date(s)||!LAHAN[$("#a-lahan").value]){
+    $("#a-err").style.display="block";return}
+  const f=d=>new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  const days=diff(s,e)+" days",range=f(s)+" - "+f(e),today=f(new Date());
+  sel.epc.forEach(m=>data.push([today,range,days,m,"EPC","Open","Open"]));
+  sel.om.forEach(m=>data.push([today,range,days,m,"O&M","Open","Open"]));
+  render();closeAll();toast("Assigment baru berhasil ditambahkan");
+});
+</script>
+</body>
+</html>

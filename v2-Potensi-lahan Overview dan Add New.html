@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Potensi Lahan</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;background:#e6e6e6;color:#111;display:flex;min-height:100vh}
+.side{width:194px;background:#2f57a8;color:#fff;padding:12px 0;flex-shrink:0}
+.logo{background:#fff;color:#0a74b8;font-weight:800;font-size:20px;margin:4px 16px 24px;padding:4px 10px;display:inline-block;letter-spacing:2px}
+.side h4{margin:12px 12px 2px;font-size:13px}
+.side a{display:block;padding:4px 12px 4px 31px;color:#fff;text-decoration:none;font-size:12.5px}
+.side a:hover{background:rgba(255,255,255,.15)}
+.main{flex:1;min-width:0}
+.top{background:#fff;height:44px;border-bottom:1px solid #999;display:flex;justify-content:flex-end;align-items:center;gap:20px;padding:0 20px}
+.top button{background:#6d3fd6;color:#fff;border:0;border-radius:8px;padding:7px 16px;font-size:12px;cursor:pointer}
+h1{font-size:19px;margin:6px 10px 6px}
+.card{background:#fff;margin:0 0 0 10px;padding:18px 15px 30px}
+.card h2{color:#2f57a8;font-size:15px;margin:0 0 20px 0}
+.bar{background:#c5daf8;color:#2f57a8;font-weight:600;padding:8px 8px;display:flex;justify-content:space-between}
+.bar button{background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+.bar button:focus-visible,.btn:focus-visible{outline:2px solid #2f57a8;outline-offset:2px}
+.tbl-wrap{border:1px solid #ddd;border-radius:8px;margin-top:10px;;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:820px}
+th{font-weight:500;color:#444;text-align:left;padding:10px 8px;border-bottom:1px solid #e4e4e4;white-space:nowrap}
+td{padding:8px;border-bottom:1px solid #eee;white-space:nowrap}
+td:first-child,th:first-child{color:#666;width:36px;text-align:center}
+.chip{padding:3px 6px;border-radius:4px;font-size:11.5px}
+/* Action button & popup menu */
+.act-btn{background:none;border:0;cursor:pointer;font:inherit;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:4px}
+.act-btn:hover,.act-btn:focus-visible{background:#e8edf8;outline:none}
+.menu{position:fixed;background:#fff;border:1.5px solid #222;border-radius:14px;padding:6px 0;min-width:140px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:20}
+.menu[hidden]{display:none}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.menu button:hover{background:#eef1f8}
+.modal input:disabled,.modal textarea:disabled,.modal select:disabled{background:#f3f3f3;color:#333}
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:10;padding:16px}
+.overlay.open{display:flex}
+.modal{background:#fff;width:min(1240px,100%);max-height:100%;overflow:auto;border-radius:6px;padding:14px 20px 20px}
+.modal>h3{color:#2f57a8;font-size:17px;margin:0;padding:6px 0 10px;border-bottom:1px solid #aaa}
+.cols{display:grid;grid-template-columns:1fr 1px 390px;gap:18px;margin-top:12px}
+.cols .div{background:#bbb}
+.cols h4{font-size:16px;margin:0 0 10px}
+label{display:block;margin:10px 0 3px}
+input,select,textarea{width:100%;border:1.5px solid #222;border-radius:4px;padding:8px;font:inherit;background:#fff}
+textarea{border-color:#ddd;border-width:3px;resize:vertical}
+select{border-color:#666;color:#555}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.up{display:flex;gap:14px;align-items:center;margin-top:4px}
+.up .btn{background:#6d3fd6;color:#fff;border:0;border-radius:4px;padding:6px 20px;cursor:pointer}
+.up span{flex:1;border:2px solid #eee;border-radius:4px;padding:6px;min-height:30px;font-size:12px;color:#555}
+.drop{border:2px dashed #cbd2e0;background:#eef1f8;text-align:center;padding:20px 10px;cursor:pointer;font-size:12px;display:block;margin:0}
+.drop b{display:block;margin-top:4px;font-size:13px}
+.drop small{color:#666;font-size:10px}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;margin-top:20px}
+.ph{aspect-ratio:1/.7;background:#e6e6e6;border:1px solid #555;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:12px}
+.ph img{width:100%;height:100%;object-fit:cover}
+.acts{display:flex;justify-content:flex-end;gap:20px;margin-top:22px}
+.acts .btn{border:0;color:#fff;font-weight:700;padding:11px 0;width:110px;cursor:pointer;border-radius:2px}
+.cancel{background:#c00d0d}.save{background:#2f57a8}
+@media(max-width:900px){.side{display:none}.cols{grid-template-columns:1fr}.cols .div{display:none}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="logo">PLN</div>
+  <h4>Dashboard</h4><a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+  <h4>Potensi Lahan</h4><a href="#">Potensi Lahan Overview</a><a href="#">Verifikasi Potensi Lahan</a><a href="#">Survey Potensi Lahan</a>
+  <h4>Mitra Overview</h4><a href="#">Mitra EPC Overview</a><a href="#">Mitra Mitra O&amp;M Overview</a><a href="#">Mitra Lahan Overview</a>
+  <h4>Assigment</h4><a href="#">Assigment Potensi Lahan</a><a href="#">Re-Assigment</a>
+  <h4>Potensi Investasi</h4><a href="#">Publish Potensi Investasi</a>
+  <h4>Investor</h4><a href="#">Daftar Potensi Investasi &amp; Booking</a>
+  <h4>Penawaran Potensi Investasi</h4><a href="#">Penawaran Investor</a>
+  <h4>Contract Management</h4><a href="#">Contract &amp; Support</a><a href="#">Progress Konstruksi</a>
+  <h4>Workflow</h4><a href="#">Workflow checklist</a><a href="#">Stage Gate</a>
+  <h4>Configurasi</h4><a href="#">Master Data</a><a href="#">Authoritation</a><a href="#">Master User</a><a href="#">Master Organization</a>
+</aside>
+
+<div class="main">
+  <div class="top"><span>🔔</span><span>👤</span><button>Keluar</button></div>
+  <h1>Potensi Lahan</h1>
+  <div class="card">
+    <h2>Potensi Lahan</h2>
+    <div class="bar">
+      <button id="btnAdd">+ Add new record</button>
+      <button onclick="render()">⟳ Refresh</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Action</th><th>No Potensi Lahan</th><th>Alamat Lahan</th><th>Luas Lahan</th><th>Pemilik</th><th>Status Lahan</th><th>Status</th><th>Stages</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Popup menu Action -->
+<div class="menu" id="menu" role="menu" hidden>
+  <button role="menuitem" id="mEdit">Edit Lahan</button>
+  <button role="menuitem" id="mView">View Lahan</button>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+  <div class="modal">
+    <h3 id="mtitle">Add Potensi Lahan</h3>
+    <div class="cols">
+      <div>
+        <h4>Lahan Mitra Information</h4>
+        <label for="pemilik">Pemilik Lahan</label><input id="pemilik">
+        <label for="alamat">Alamat Lengkap Lahan</label><textarea id="alamat" rows="6"></textarea>
+        <label for="desk">Deskripsi Lahan</label><textarea id="desk" rows="6"></textarea>
+        <div class="row">
+          <div><label for="luas">Luas Lahan</label><input id="luas" placeholder="Add text"></div>
+          <div><label for="status">Status Lahan</label>
+            <select id="status"><option>Milik Sendiri</option><option>Sewa</option><option>Kerja Sama</option></select></div>
+          <div><label for="prov">Province</label>
+            <select id="prov"><option>DKI Jakarta</option><option>Jawa Barat</option><option>Banten</option></select></div>
+          <div><label for="city">City</label>
+            <select id="city"><option>Jakarta Pusat</option><option>Jakarta Selatan</option><option>Bandung</option></select></div>
+        </div>
+        <label for="pos">Postal Code</label><input id="pos" style="max-width:50%">
+        <div class="row">
+          <div><label for="lng">Longtitude</label><input id="lng" placeholder="Add text"></div>
+          <div><label for="lat">Latitude</label><input id="lat" placeholder="Add text"></div>
+        </div>
+        <label style="font-size:11px;margin-top:22px">Upload Dokument Kepemilikan Tanah &nbsp; (SHM/HGB/ Hak Pakai)</label>
+        <div class="up"><button class="btn" type="button" onclick="doc.click()">Upload</button><span id="docname"></span></div>
+        <input type="file" id="doc" accept=".pdf,image/*" hidden>
+      </div>
+      <div class="div"></div>
+      <div>
+        <h4>Dokumentasi</h4>
+        <label class="drop" for="files" id="drop">
+          <svg width="38" height="30" viewBox="0 0 24 24" fill="#3b82f6"><path d="M19.4 10a7.5 7.5 0 0 0-14.3-1.9A5.5 5.5 0 0 0 6 19h12.5a4.5 4.5 0 0 0 .9-9zM13 13v4h-2v-4H8l4-4 4 4z"/></svg>
+          <b>Drag &amp; Drop or Click to Upload Photos</b>Tarik &amp; Lepas atau Klik untuk Unggah Foto<br>
+          <small>Supported formats: JPEG, PNG. Max 10MB each. (Maximum 10 files)</small>
+        </label>
+        <input type="file" id="files" accept="image/jpeg,image/png" multiple hidden>
+        <div class="photos" id="photos"></div><br><br><br><br>
+        <div class="acts"><button class="btn cancel" id="btnCancel">Cancel</button><button class="btn save" id="btnSave">Save</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const stages=[["Verifikasi","#d9d9d9","#333"],["Assigment","#8bea9f","#1b4d2a"],["Survey Pemasangan","#fcd3a5","#7a4a10"],["Verifikasi RAB","#22468f","#fff"],["Final RAB","#fbc4c4","#8a1c1c"],["Deal","#c9dcfb","#22468f"],["Konstruksi","#e3dafb","#4b3a8f"],["SPKLU Live","#5b2fc9","#fff"]];
+let rows=stages.map((s,i)=>({no:"PGJ/2026/05/-"+(i?"02":"01"),alamat:i?"Jalan Kemayoran":"Jalan Asia Afrika",luas:"600m3",pemilik:"EKo",status:"Milik Sendiri",stage:s}));
+const $=id=>document.getElementById(id);
+
+function render(){
+  let h=rows.map((r,i)=>`<tr><td>${i+1}</td><td><button class="act-btn" data-i="${i}" aria-haspopup="menu" aria-label="Aksi">:::</button></td><td>${r.no}</td><td>${r.alamat}</td><td>${r.luas}</td><td>${r.pemilik}</td><td>${r.status}</td><td>Submited</td><td><span class="chip" style="background:${r.stage[1]};color:${r.stage[2]}">${r.stage[0]}</span></td></tr>`).join("");
+  for(let i=rows.length+1;i<=11;i++)h+=`<tr><td>${i}</td><td colspan="8">&nbsp;</td></tr>`;
+  $("tbody").innerHTML=h;
+}
+function drawPhotos(list){
+  $("photos").innerHTML="";
+  for(let i=0;i<6;i++){
+    const d=document.createElement("div");d.className="ph";
+    if(list[i]){const im=new Image();im.src=URL.createObjectURL(list[i]);im.alt="Foto "+(i+1);d.appendChild(im)}
+    else d.textContent="FOTO "+(i+1);
+    $("photos").appendChild(d);
+  }
+}
+
+const F=["pemilik","alamat","desk","luas","status","prov","city","pos","lng","lat"];
+let mode="add", cur=null, menuIdx=null;
+
+function openModal(m="add", i=null){
+  mode=m; cur=i;
+  const r = i!==null ? rows[i] : {};
+  $("mtitle").textContent = m==="edit" ? "Edit Potensi Lahan" : m==="view" ? "View Potensi Lahan" : "Add Potensi Lahan";
+  F.forEach(k=>{
+    const el=$(k);
+    if(el.tagName==="SELECT") el.selectedIndex=0;
+    el.value = r[k] ?? (el.tagName==="SELECT" ? el.value : "");
+    if(r[k]==="-") el.value="";
+    el.disabled = (m==="view");
+  });
+  $("doc").disabled = $("files").disabled = (m==="view");
+  document.querySelector("#overlay .up .btn").disabled = (m==="view");
+  $("btnSave").style.display = (m==="view") ? "none" : "";
+  $("btnCancel").textContent = (m==="view") ? "Close" : "Cancel";
+  $("overlay").classList.add("open");
+  drawPhotos([]);
+  if(m!=="view") $("pemilik").focus();
+}
+function closeModal(){
+  $("overlay").classList.remove("open");
+  document.querySelectorAll(".modal input,.modal textarea").forEach(e=>e.value="");
+  $("docname").textContent="";
+}
+$("btnAdd").onclick=()=>openModal("add");
+$("btnCancel").onclick=closeModal;
+$("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+$("doc").onchange=e=>$("docname").textContent=e.target.files[0]?.name||"";
+function handleFiles(fs){
+  const ok=[...fs].filter(f=>/image\/(jpeg|png)/.test(f.type)&&f.size<=10*1024*1024).slice(0,10);
+  drawPhotos(ok);
+}
+$("files").onchange=e=>handleFiles(e.target.files);
+["dragover","drop"].forEach(t=>$("drop").addEventListener(t,e=>{e.preventDefault();if(t==="drop")handleFiles(e.dataTransfer.files)}));
+
+$("btnSave").onclick=()=>{
+  if(!$("pemilik").value.trim()||!$("alamat").value.trim()){alert("Pemilik Lahan dan Alamat Lengkap Lahan wajib diisi.");return}
+  const d=Object.fromEntries(F.map(k=>[k,$(k).value.trim()]));
+  d.luas=d.luas||"-";
+  if(mode==="edit") Object.assign(rows[cur],d);
+  else rows.push({no:"PGJ/2026/05/-"+String(rows.length+1).padStart(2,"0"),stage:stages[0],...d});
+  closeModal();render();
+};
+
+/* Popup di bawah ikon ::: */
+const menu=$("menu");
+function closeMenu(){menu.hidden=true;menuIdx=null}
+$("tbody").addEventListener("click",e=>{
+  const b=e.target.closest(".act-btn"); if(!b) return;
+  e.stopPropagation();
+  const i=+b.dataset.i;
+  if(menuIdx===i&&!menu.hidden){closeMenu();return}
+  const r=b.getBoundingClientRect();
+  menu.style.left=r.left+"px";
+  menu.style.top=(r.bottom+4)+"px";
+  menu.hidden=false; menuIdx=i;
+});
+$("mEdit").onclick=()=>{const i=menuIdx;closeMenu();openModal("edit",i)};
+$("mView").onclick=()=>{const i=menuIdx;closeMenu();openModal("view",i)};
+document.addEventListener("click",e=>{if(!menu.contains(e.target))closeMenu()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
+window.addEventListener("resize",closeMenu);
+document.querySelector(".tbl-wrap").addEventListener("scroll",closeMenu);
+
+render();
+</script>
+</body>
+</html>

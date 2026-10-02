@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow Activity</title>
+<style>
+  :root{
+    --side:#2f57a8; --bg:#e6e6e6; --ink:#1d1d1f; --muted:#555;
+    --line:#e3e3e3; --green:#7be0a0; --purple:#6d3bdc;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{font-family:"Noto Sans","Segoe UI",Arial,sans-serif;font-size:13px;color:var(--ink);background:var(--bg);display:flex}
+  /* Sidebar */
+  aside{width:200px;flex:none;background:var(--side);color:#fff;overflow-y:auto;padding:14px 0 20px}
+  .brand{display:flex;align-items:center;gap:36px;padding:0 17px 18px}
+  .logo{background:#fff;width:82px;height:32px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;color:#1b9ad6;letter-spacing:2px;font-size:15px}
+  .logo i{width:18px;height:20px;background:#f5c400;display:inline-block;clip-path:polygon(40% 0,100% 0,60% 45%,100% 45%,30% 100%,45% 55%,0 55%)}
+  .burger{width:32px;height:22px;display:flex;flex-direction:column;justify-content:space-between}
+  .burger span{height:4px;background:#fff;border-radius:2px}
+  .grp{font-weight:700;padding:0 12px;margin-top:6px;line-height:1.3}
+  aside a{display:block;color:#fff;text-decoration:none;padding:3px 12px 3px 32px;line-height:1.25;font-size:12.5px}
+  aside a:hover{background:rgba(255,255,255,.12)}
+  aside a.active{background:rgba(255,255,255,.2)}
+  /* Main */
+  main{flex:1;min-width:0;display:flex;flex-direction:column}
+  header{height:46px;background:#fff;border-bottom:1px solid #ccc;display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:0 14px}
+  .bell{position:relative;display:flex}
+  .bell b{position:absolute;top:-4px;right:-6px;background:#fff;color:#c00;border:1px solid #c00;border-radius:8px;font-size:7px;padding:0 3px}
+  .logout{background:var(--purple);color:#fff;border:0;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer}
+  .content{padding:0 14px 24px;overflow:auto}
+  h1{font-size:20px;margin:6px 0 6px 6px;font-weight:700}
+  .panel{background:#fff;padding:0 16px 40px;min-height:438px}
+  .tab{font-weight:600;font-size:12px;padding:15px 0 8px;border-bottom:1px solid #ccc;margin:0 -5px 30px;padding-left:5px}
+  .grid{border:1px solid var(--line);border-radius:8px;padding:0 0 0;overflow-x:auto}
+  .tools{display:flex;gap:18px;padding:14px 14px 10px;color:#333}
+  .tools svg{width:15px;height:15px;stroke:#333;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;cursor:pointer}
+  table{border-collapse:collapse;width:100%;min-width:900px}
+  th{font-weight:400;color:#555;text-align:left;padding:10px 12px;height:44px;white-space:nowrap}
+  th svg{width:12px;height:12px;vertical-align:-1px;margin-right:6px;stroke:#666;fill:none;stroke-width:1.6}
+  td{padding:0 12px;height:39px;border-top:1px solid var(--line);color:#333}
+  tr.tall td{height:55px;border-top:0}
+  td.n{color:#666;width:55px;padding-left:15px}
+  .btn{background:var(--green);color:#1b4d2e;border-radius:5px;padding:6px 11px;display:inline-block;font-size:13px;cursor:pointer;border:0;font-family:inherit}
+  .btn:hover{filter:brightness(.95)}
+  .add{border-top:1px solid var(--line);padding:9px 14px 12px;font-size:18px;color:#333;cursor:pointer}
+  th.plus{text-align:right;font-size:18px;color:#333}
+
+  .dots{background:none;border:0;cursor:pointer;padding:6px 8px;border-radius:5px;display:inline-flex}
+  .dots:hover,.dots.open{background:#eee}
+  .dots svg{width:18px;height:18px;fill:#333}
+  .pop{position:fixed;z-index:50;background:#fff;border:1px solid #d5d5d5;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.15);min-width:110px;padding:4px;display:none}
+  .pop a{display:block;padding:7px 12px;color:#1d4ed8;text-decoration:none;border-radius:4px}
+  .pop a:hover{background:#eef3ff;text-decoration:underline}
+  .back{background:none;border:0;color:#2f57a8;font:600 12.5px inherit;font-family:inherit;cursor:pointer;padding:0 0 12px}
+  .back:hover{text-decoration:underline}
+  .tabs{display:flex;gap:4px;overflow-x:auto;margin-bottom:-1px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tb{flex:none;padding:8px 14px;border:1px solid transparent;border-bottom:0;border-radius:8px 8px 0 0;background:#dde3f0;color:#6b7394;font:600 12px "Noto Sans",Arial,sans-serif;cursor:pointer;white-space:nowrap}
+  .tb:hover{background:#c8d0e8}
+  .tb.on{background:#fff;color:#1c2340;border-color:#dde1ec}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+  .card{border:1px solid #dde1ec;border-radius:0 10px 10px 10px;padding:22px}
+  .sh{display:flex;align-items:center;gap:12px;padding-bottom:14px;margin-bottom:6px;border-bottom:1px solid #dde1ec}
+  .badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+  .sh b{font-size:16px}
+  .ck th{text-align:left;font-size:11px;font-weight:700;color:#6b7394;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;background:#f7f9fd;border-bottom:2px solid #dde1ec;height:auto}
+  .ck td{padding:12px 14px;border-top:0;border-bottom:1px solid #dde1ec;height:auto}
+  .ck tr:last-child td{border-bottom:0}
+  .ck{min-width:0}
+  .filled{font-weight:500}
+  .di{border:1px solid #dde1ec;border-radius:5px;padding:4px 8px;font:12px inherit;font-family:inherit;background:#f0f2f7}
+  @media(max-width:760px){aside{display:none}}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand">
+    <div class="logo"><i></i>PLN</div>
+    <div class="burger"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="grp">Dashboard</div>
+  <a href="#">Dashboard Pengelolaan Lahan SPKLU</a>
+
+  <div class="grp" style="margin-top:12px">Potensi Lahan</div>
+  <a href="#">Potensi Lahan Overview</a>
+  <a href="#" style="margin-top:6px">Verifikasi Potensi Lahan</a>
+  <a href="#" style="margin-top:4px">Survey Potensi Lahan</a>
+
+  <div class="grp" style="margin-top:12px;padding-left:15px">Mitra Overview</div>
+  <a href="#" style="margin-top:6px">Mitra EPC Overview</a>
+  <a href="#" style="padding-top:0">Mitra Mitra O&amp;M Overview</a>
+  <a href="#" style="padding-top:0">Mitra Lahan Overview</a>
+
+  <div class="grp" style="margin-top:12px;padding-left:15px">Assigment</div>
+  <a href="#">Assigment Potensi Lahan</a>
+  <a href="#" style="margin-top:8px;padding-left:38px">Re-Assigment</a>
+
+  <div class="grp" style="margin-top:4px">Potensi Investasi</div>
+  <a href="#" style="padding-left:38px">Publish Potensi Investasi</a>
+  <div class="grp">Investor</div>
+  <a href="#" style="margin-top:8px;padding-left:34px">Daftar Potensi Investasi &amp; Booking</a>
+
+  <div class="grp" style="margin-top:8px">Penawaran Potensi Investasi</div>
+  <a href="#" style="padding-left:34px;margin-top:3px">Penawaran Investor</a>
+
+  <div class="grp" style="margin-top:14px;padding-left:10px">Contract Management</div>
+  <a href="#" style="padding-left:34px">Contract &amp; Support</a>
+  <a href="#" style="padding-left:38px;margin-top:3px">Progress Konstruksi</a>
+
+  <div class="grp" style="margin-top:12px;padding-left:14px">Workflow</div>
+  <a href="#" class="active" style="padding-left:40px;margin-top:4px">Workflow checklist</a>
+  <a href="#" style="padding-left:40px;margin-top:3px">Stage Gate</a>
+
+  <div class="grp" style="padding-left:14px">Configurasi</div>
+  <a href="#" style="padding-left:32px">Master Data</a>
+  <a href="#" style="padding-left:32px;margin-top:3px">Authotization</a>
+  <a href="#" style="padding-left:32px;margin-top:3px">Master User</a>
+  <a href="#" style="padding-left:32px;margin-top:3px">Master Organization</a>
+</aside>
+
+<main>
+  <header>
+    <span class="bell">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#111"><path d="M12 22a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1z"/></svg>
+      <b>8</b>
+    </span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#111"><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v3z"/></svg>
+    <button class="logout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 4H5v16h5M9 12h11M16 8l4 4-4 4"/></svg>
+      Keluar
+    </button>
+  </header>
+
+  <div class="content">
+    <h1>Workflow Activity</h1>
+    <section class="panel" id="listView">
+      <div class="tab">Workflow Activity</div>
+
+      <div class="grid">
+        <div class="tools" aria-label="Toolbar tabel">
+          <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4l2-2M20 20v-5h-5"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 10v10"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="5" rx="1"/><path d="M4 15h16M4 19h10"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M8 20V4M4 8l4-4 4 4M16 4v16M12 16l4 4 4-4"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M3 8h11M18 8h3M3 16h3M10 16h11"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 15V8M9 11l3-3 3 3"/></svg>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:55px"></th>
+              <th style="width:105px"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg>Action</th>
+              <th style="width:188px"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Lahan ID</th>
+              <th style="width:242px"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Assign No</th>
+              <th style="width:157px"><svg viewBox="0 0 24 24"><path d="M7 4h10v16l-5-4-5 4z"/></svg>Stages</th>
+              <th><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Last Activity</th>
+              <th class="plus">+</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+
+        <div class="add">+</div>
+      </div>
+    </section>
+    <section class="panel" id="detailView" style="display:none;padding-top:16px">
+      <div class="tab" style="margin-top:0">Workflow Checklist</div>
+      <button class="back" onclick="showList()">← Kembali ke Workflow Activity</button>
+      <div class="tabs" id="tabs"></div>
+      <div class="card" id="card"></div>
+    </section>
+  </div>
+</main>
+<div class="pop" id="pop"><a href="#" id="popDetail">Detail</a></div>
+
+<script>
+  const data = [
+    ["PGJ/2026/05/-01","ASSG-01/05/PG-2026/05/01/01","Verifikasi Lahan","Mitra Submit Lahan"],
+    ["PGJ/2026/05/-02","ASSG-01/05/PG-2026/05/01/02","Survey Lahan","Mitra ICG Submit Janji Survey Lahan"],
+    ["PGJ/2026/05/-03","ASSG-01/05/PG-2026/05/01/03","Assigment","Konfirmasi Mitra"],
+    ["PGJ/2026/05/-04","ASSG-01/05/PG-2026/05/01/04","Konstruksi","Pembuatan Data Kontrak"]
+  ];
+  document.getElementById("rows").innerHTML = data.map((r,i)=>`
+    <tr class="${i===0?'tall':''}">
+      <td class="n">${i+1}</td>
+      <td><button class="dots" aria-label="Aksi baris ${i+1}" onclick="togglePop(event,${i})"><svg viewBox="0 0 18 18"><circle cx="4" cy="6" r="1.6"/><circle cx="9" cy="6" r="1.6"/><circle cx="14" cy="6" r="1.6"/><circle cx="4" cy="12" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="14" cy="12" r="1.6"/></svg></button></td>
+      <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td></td>
+    </tr>`).join("");
+
+  const stages=[
+    {n:"Verifikasi Lahan",c:"#3b82f6",bg:"#dbeafe",fg:"#1d4ed8",a:[["Mitra Submit Pengajuan Lahan",{t:"12 Sep 2025"}],["Hasil Verifikasi Pengajuan Lahan : Approve / Reject",{d:"2025-09-20"}]]},
+    {n:"Survey",c:"#8b5cf6",bg:"#ede9fe",fg:"#5b21b6",a:[["Mitra ICG Submit Janji Survey Lahan",{t:"18 Sep 2025"}],["Mitra ICG Input Hasil Survey & Keputusan : Approve / Reject",{}]]},
+    {n:"Assigment",c:"#f59e0b",bg:"#fef9c3",fg:"#854d0e",a:[["ICG Melakukan Assigment",{t:"22 Sep 2025"}],["Konfirmasi Mitra",{t:"24 Sep 2025"}]]},
+    {n:"Survey Pemasangan",c:"#10b981",bg:"#d1fae5",fg:"#065f46",a:[["Confirm Mitra & Janji Survey Lahan oleh mitra EPC",{t:"01 Oct 2025"}],["ICG Confirm Survey dari mitra EPC",{t:"01 Oct 2025"}],["Confirm Minat oleh Mitra O&M",{d:"2025-10-10"}],["Mitra Input Hasil Survey dan RAB",{}]]},
+    {n:"Verifikasi RAB",c:"#ef4444",bg:"#fee2e2",fg:"#991b1b",a:[["Verifikasi RAB Mitra by ICG",{}],["Keputusan Verifikasi RAB : Approved / Reject",{}]]},
+    {n:"Final RAB",c:"#06b6d4",bg:"#cffafe",fg:"#155e75",a:[["Pemilihan Final RAB",{}],["Generate WO",{}],["Publish Potensi Investasi",{}]]},
+    {n:"Deal",c:"#f97316",bg:"#ffedd5",fg:"#9a3412",a:[["Investor Minat & Booking",{}],["Approval Booking by ICG",{}],["Investor Submit Penawaran",{}],["ICG pilih investor",{}]]},
+    {n:"Konstruksi",c:"#84cc16",bg:"#ecfccb",fg:"#3f6212",a:[["Pembuatan Data Kontrak",{}]]},
+    {n:"SPKLU Live",c:"#ec4899",bg:"#fce7f3",fg:"#9d174d",a:[["Finalisasi Kontrak",{}],["SPKLU Live",{}]]}
+  ];
+  const stageIdx={"Verifikasi Lahan":0,"Survey Lahan":1,"Assigment":2,"Konstruksi":7};
+  const pop=document.getElementById("pop");
+  let cur=0,btnOpen=null;
+
+  function closePop(){pop.style.display="none";if(btnOpen)btnOpen.classList.remove("open");btnOpen=null}
+  function togglePop(e,i){
+    e.stopPropagation();
+    const b=e.currentTarget;
+    if(btnOpen===b){closePop();return}
+    closePop();
+    const r=b.getBoundingClientRect();
+    pop.style.left=r.left+"px";
+    pop.style.top=(r.bottom+4)+"px";
+    pop.style.display="block";
+    b.classList.add("open");btnOpen=b;cur=i;
+  }
+  document.addEventListener("click",closePop);
+  window.addEventListener("scroll",closePop,true);
+  window.addEventListener("resize",closePop);
+  pop.addEventListener("click",e=>e.stopPropagation());
+  document.getElementById("popDetail").addEventListener("click",e=>{
+    e.preventDefault();closePop();showDetail(cur);
+  });
+
+  function showDetail(i){
+    document.getElementById("listView").style.display="none";
+    document.getElementById("detailView").style.display="block";
+    const idx=stageIdx[data[i][2]]??0;
+    document.getElementById("tabs").innerHTML=stages.map((s,k)=>
+      `<button class="tb" data-k="${k}"><span class="dot" style="background:${s.c}"></span>${s.n}</button>`).join("");
+    document.querySelectorAll(".tb").forEach(b=>b.onclick=()=>renderStage(i,+b.dataset.k));
+    renderStage(i,idx);
+  }
+  function renderStage(i,k){
+    const s=stages[k];
+    document.querySelectorAll(".tb").forEach((b,j)=>b.classList.toggle("on",j===k));
+    const rows=s.a.map((a,n)=>{
+      const v=a[1];
+      const cell=v.t?`<span class="filled">${v.t}</span>`:`<input type="date" class="di" value="${v.d||""}">`;
+      return `<tr><td>${n+1}</td><td>${a[0].replace(/&/g,"&amp;")}</td><td>${cell}</td></tr>`;
+    }).join("");
+    document.getElementById("card").innerHTML=`
+      <div class="sh"><span class="badge" style="background:${s.bg};color:${s.fg}">No Potensi Pengajuan Lahan</span><b>${data[i][0]}</b></div>
+      <table class="ck"><thead><tr><th style="width:50px">#</th><th>Aktivitas</th><th style="width:200px">Tanggal Aktual</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  function showList(){
+    document.getElementById("detailView").style.display="none";
+    document.getElementById("listView").style.display="block";
+  }
+</script>
+</body>
+</html>
